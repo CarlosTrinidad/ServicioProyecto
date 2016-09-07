@@ -19,7 +19,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id_subject') ?>
 
-    <?= $form->field($model, 'id_schoolroom') ?>
+    <?= $form->field($model, 'id_room') ?>
 
     <?= $form->field($model, 'day') ?>
 

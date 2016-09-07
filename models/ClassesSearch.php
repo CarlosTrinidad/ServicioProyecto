@@ -7,7 +7,7 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Classes;
 use app\models\Subject;
-use app\models\Schoolroom;
+use app\models\Room;
 
 /**
  * ClassesSearch represents the model behind the search form about `app\models\Classes`.
@@ -20,8 +20,8 @@ class ClassesSearch extends Classes
     public function rules()
     {
         return [
-            [['id'], 'integer'],
-            [['id_subject', 'id_schoolroom', 'day','time_start', 'time_end'], 'safe'],
+            [['id', 'day'], 'integer'],
+            [['time_start','id_subject', 'id_room', 'time_end'], 'safe'],
         ];
     }
 
@@ -58,19 +58,21 @@ class ClassesSearch extends Classes
             // $query->where('0=1');
             return $dataProvider;
         }
-
-        // $query->joinWith('id_subject');
-        // $query->joinWith('id_schoolroom');
         
+         $query->joinWith(['idSubject','idRoom']);
+
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'id_subject' => $this->id_subject,
-            'id_schoolroom' => $this->id_schoolroom,
+            // 'id_room' => $this->id_room,
             'day' => $this->day,
             'time_start' => $this->time_start,
             'time_end' => $this->time_end,
         ]);
+        $query->andFilterWhere(['like', 'subject.name', $this->id_subject]);
+        $query->andFilterWhere(['like', 'room.room', $this->id_room]);
+
+
 
         return $dataProvider;
     }

@@ -5,20 +5,22 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "schoolroom".
+ * This is the model class for table "room".
  *
  * @property integer $id
- * @property string $schoolroom
+ * @property string $room
  * @property integer $capacity
+ *
+ * @property Classes[] $classes
  */
-class Schoolroom extends \yii\db\ActiveRecord
+class Room extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'schoolroom';
+        return 'room';
     }
 
     /**
@@ -27,9 +29,9 @@ class Schoolroom extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['schoolroom', 'capacity'], 'required'],
+            [['room', 'capacity'], 'required'],
             [['capacity'], 'integer'],
-            [['schoolroom'], 'string', 'max' => 100],
+            [['room'], 'string', 'max' => 20],
         ];
     }
 
@@ -40,8 +42,16 @@ class Schoolroom extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'schoolroom' => Yii::t('app', 'Schoolroom'),
+            'room' => Yii::t('app', 'Room'),
             'capacity' => Yii::t('app', 'Capacity'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getClasses()
+    {
+        return $this->hasMany(Classes::className(), ['id_room' => 'id']);
     }
 }

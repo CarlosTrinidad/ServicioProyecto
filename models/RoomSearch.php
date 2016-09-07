@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Schoolroom;
+use app\models\Room;
 
 /**
- * SchoolroomSearch represents the model behind the search form about `app\models\Schoolroom`.
+ * RoomSearch represents the model behind the search form about `app\models\Room`.
  */
-class SchoolroomSearch extends Schoolroom
+class RoomSearch extends Room
 {
     /**
      * @inheritdoc
@@ -19,7 +19,7 @@ class SchoolroomSearch extends Schoolroom
     {
         return [
             [['id', 'capacity'], 'integer'],
-            [['schoolroom'], 'safe'],
+            [['room'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class SchoolroomSearch extends Schoolroom
      */
     public function search($params)
     {
-        $query = Schoolroom::find();
+        $query = Room::find();
 
         // add conditions that should always apply here
 
@@ -63,7 +63,7 @@ class SchoolroomSearch extends Schoolroom
             'capacity' => $this->capacity,
         ]);
 
-        $query->andFilterWhere(['like', 'schoolroom', $this->schoolroom]);
+        $query->andFilterWhere(['like', 'room', $this->room]);
 
         return $dataProvider;
     }

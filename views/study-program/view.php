@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Classes */
+/* @var $model app\models\StudyProgram */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Classes'), 'url' => ['index']];
+$this->title = $model->name;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Study Programs'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="classes-view">
+<div class="study-program-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -29,11 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'id_subject',
-            'id_room',
-            'day',
-            'time_start',
-            'time_end',
+            'name',
         ],
     ]) ?>
 
