@@ -26,7 +26,10 @@ use app\models\Room;
             ['prompt'=>'Select schoolroom']
             ) ?>
 
-    <?= $form->field($model, 'day')->dropDownList(['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],[1,2,3,4,5,6,0]) ?>
+<!--     <?= $form->field($model, 'day')->dropDownList(['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],[1,2,3,4,5,6,0]) ?>
+ -->
+
+     <?= $form->field($model, 'day')->dropDownList(['1' => 'Lunes','2' => 'Martes', '3'=> 'Miércoles', '4' => 'Jueves', '5' => 'Viernes', '6' => 'Sábado', '0' => 'Domingo']) ?>
 
     <?= $form->field($model, 'time_start')->widget(TimePicker::classname(), [
                 'pluginOptions' => [
