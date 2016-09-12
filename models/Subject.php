@@ -16,7 +16,6 @@ use Yii;
  * @property Classes[] $classes
  * @property InstructorSubject[] $instructorSubjects
  * @property ProgramSubject[] $programSubjects
- * @property Semester $semester0
  */
 class Subject extends \yii\db\ActiveRecord
 {
@@ -77,13 +76,5 @@ class Subject extends \yii\db\ActiveRecord
     public function getProgramSubjects()
     {
         return $this->hasMany(ProgramSubject::className(), ['id_subject' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSemester0()
-    {
-        return $this->hasOne(Semester::className(), ['id' => 'semester']);
     }
 }

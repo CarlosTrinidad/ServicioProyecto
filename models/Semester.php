@@ -9,8 +9,6 @@ use Yii;
  *
  * @property integer $id
  * @property string $name
- *
- * @property Subject $id0
  */
 class Semester extends \yii\db\ActiveRecord
 {
@@ -30,7 +28,6 @@ class Semester extends \yii\db\ActiveRecord
         return [
             [['name'], 'required'],
             [['name'], 'string', 'max' => 20],
-            [['id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['id' => 'semester']],
         ];
     }
 
@@ -43,13 +40,5 @@ class Semester extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getId0()
-    {
-        return $this->hasOne(Subject::className(), ['semester' => 'id']);
     }
 }
