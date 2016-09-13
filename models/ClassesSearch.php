@@ -8,6 +8,7 @@ use yii\data\ActiveDataProvider;
 use app\models\Classes;
 use app\models\Subject;
 use app\models\Room;
+use yii\helpers\ArrayHelper;
 
 /**
  * ClassesSearch represents the model behind the search form about `app\models\Classes`.
@@ -20,8 +21,8 @@ class ClassesSearch extends Classes
     public function rules()
     {
         return [
-            [['id', 'day'], 'integer'],
-            [['time_start','id_subject', 'id_room', 'time_end'], 'safe'],
+            [['id'], 'integer'],
+            [['day','time_start','id_subject', 'id_room', 'time_end'], 'safe'],
         ];
     }
 
@@ -65,15 +66,36 @@ class ClassesSearch extends Classes
         $query->andFilterWhere([
             'id' => $this->id,
             // 'id_room' => $this->id_room,
-            'day' => $this->day,
+            //'day' => $this->day,
             'time_start' => $this->time_start,
             'time_end' => $this->time_end,
         ]);
+        
+if($this->day){
+         $dias = array(  '1' => 'Lunes',
+                    '2' => 'Martes',
+                    '3'=> 'Miércoles',
+                    '4' => 'Jueves',
+                    '5' => 'Viernes',
+                    '6' => 'Sábado',
+                    '0' => 'Domingo');
+$max=0;
+$ind=0;
+                    for ($i = 1; $i <= 6; $i++) {
+                     $valor = ArrayHelper::getValue($dias, $i);
+                     similar_text($valor, $this->day, $percent); 
+                     if($max<$percent&&$percent>25){
+                        $max=$percent;
+                        $ind=$i;
+                     }
+                         }
+}else{
+    $ind=$this->day;
+}
+
         $query->andFilterWhere(['like', 'subject.name', $this->id_subject]);
         $query->andFilterWhere(['like', 'room.room', $this->id_room]);
-
-
-
+        $query->andFilterWhere(['like', 'day',$ind]);
         return $dataProvider;
     }
 }
