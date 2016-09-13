@@ -62,15 +62,6 @@ class ClassesSearch extends Classes
         
          $query->joinWith(['idSubject','idRoom']);
 
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'id' => $this->id,
-            // 'id_room' => $this->id_room,
-            //'day' => $this->day,
-            'time_start' => $this->time_start,
-            'time_end' => $this->time_end,
-        ]);
-        
 if($this->day){
          $dias = array(  '1' => 'Lunes',
                     '2' => 'Martes',
@@ -80,22 +71,31 @@ if($this->day){
                     '6' => 'Sábado',
                     '0' => 'Domingo');
 $max=0;
-$ind=0;
-                    for ($i = 1; $i <= 6; $i++) {
+$ind=-1;
+                    for ($i = 0; $i <= 6; $i++) {
                      $valor = ArrayHelper::getValue($dias, $i);
                      similar_text($valor, $this->day, $percent); 
                      if($max<$percent&&$percent>40){
                         $max=$percent;
                         $ind=$i;
                      }
-                         }
+                    }
 }else{
     $ind=$this->day;
 }
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'id' => $this->id,
+            // 'id_room' => $this->id_room,
+            'day' => $ind,
+            'time_start' => $this->time_start,
+            'time_end' => $this->time_end,
+        ]);
+        
 
         $query->andFilterWhere(['like', 'subject.name', $this->id_subject]);
         $query->andFilterWhere(['like', 'room.room', $this->id_room]);
-        $query->andFilterWhere(['like', 'day',$ind]);
+        // $query->andFilterWhere(['like', 'day',$ind]);
         return $dataProvider;
     }
 }
