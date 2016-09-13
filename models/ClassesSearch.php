@@ -84,7 +84,7 @@ $ind=0;
                     for ($i = 1; $i <= 6; $i++) {
                      $valor = ArrayHelper::getValue($dias, $i);
                      similar_text($valor, $this->day, $percent); 
-                     if($max<$percent&&$percent>25){
+                     if($max<$percent&&$percent>40){
                         $max=$percent;
                         $ind=$i;
                      }
