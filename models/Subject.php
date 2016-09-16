@@ -12,6 +12,8 @@ use Yii;
  * @property string $sp
  * @property integer $model
  * @property integer $semester
+ * @property string $type
+ * @property string $modality
  *
  * @property Classes[] $classes
  * @property InstructorSubject[] $instructorSubjects
@@ -33,10 +35,12 @@ class Subject extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'sp', 'model', 'semester'], 'required'],
+            [['name', 'sp', 'model', 'semester', 'type', 'modality'], 'required'],
             [['model', 'semester'], 'integer'],
             [['name'], 'string', 'max' => 100],
             [['sp'], 'string', 'max' => 20],
+            [['type'], 'string', 'max' => 10],
+            [['modality'], 'string', 'max' => 15],
         ];
     }
 
@@ -51,6 +55,8 @@ class Subject extends \yii\db\ActiveRecord
             'sp' => Yii::t('app', 'Sp'),
             'model' => Yii::t('app', 'Model'),
             'semester' => Yii::t('app', 'Semester'),
+            'type' => Yii::t('app', 'Type'),
+            'modality' => Yii::t('app', 'Modality'),
         ];
     }
 
