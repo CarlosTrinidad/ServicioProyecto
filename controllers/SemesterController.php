@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Subject;
 use app\models\Instructor;
+use app\models\InstructorSubject;
 
 /**
  * SemesterController implements the CRUD actions for Semester model.
@@ -79,57 +80,110 @@ class SemesterController extends Controller
         ini_set('memory_limit', '-1');
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
 
-        $inputFile = "files/import.xlsx";
+        $inputFile = "./files/import.xlsx";
+        $profeError = array();
 
         try{
+            // $sheetIndex = 0;
+            // Fifth sheet (PROFESORES)
+            $i=4;
             $inputFileType = \PHPExcel_IOFactory::identify($inputFile);
             $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
             $sheetnames = $objReader->listWorksheetNames($inputFile);
+            $objReader->setLoadSheetsOnly($sheetnames[$i]);
+            print_r($sheetnames[$i]);
+            $objReader->setReadDataOnly(true);
+            $objPHPExcel = $objReader->load($inputFile);
+            $sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+            // print_r($sheetData[2]['C']);
+            $highestRow = $objPHPExcel->getSheet(0)->getHighestRow();
+            // print_r($highestRow);
+
+            for ($row=2; $row <= $highestRow ; $row++) { 
+                $newInstructor = new Instructor();
+                $newInstructor->name = $sheetData[$row]['C'];
+                $newInstructor->last_name = $sheetData[$row]['D'];
+                $newInstructor->save();
+            }
+            echo "Instructors Done!";
+            echo '<br/>';
+            //covertir MEFI en 0
+             $modelos = array('0' => 'MEFI','1' => 'MEyA', '2'=> 'MEFI-MEyA');
+
+            for ($i=0; $i < 2 ; $i++) { 
+                    print_r($sheetnames[$i]);
+                    echo '<br/>';
+
+                $objReader->setLoadSheetsOnly($sheetnames[$i]);
+                $objReader->setReadDataOnly(true);
+                $objPHPExcel = $objReader->load($inputFile);
+                $sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+                $highestRow = $objPHPExcel->getSheet(0)->getHighestRow();
+
+                for ($row=2; $row <= $highestRow ; $row++) { 
+                    $newSubject = new Subject();
+                    $newSubject->name = (string)$sheetData[$row]['B'];
+                    $newSubject->sp = (string)$sheetData[$row]['C'];
+                    $newSubject->model = array_search($sheetData[$row]['H'],$modelos);
+                    $newSubject->semester = (int)str_replace("°", "", $sheetData[$row]['D']);
+                    $newSubject->modality = (string)$sheetData[$row]['G'];
+                    // $newSubject->type = (string)$sheetnames[$i];
+                    $newSubject->type = "TEMP";
+                    $newSubject->save();
+
+                    // Identificar si las materia es impartida por dos profesores
+                    $pos = strpos($sheetData[$row]['N'], '/');
+                    $pos2 = strpos($sheetData[$row]['O'], '/');
+                    $nombres = array();
+                    $apellidos = array();
+
+                    if ($pos !== false) {
+                        // echo "La cadena fue encontrada en la cadena";
+                        // echo " y existe en la posición $pos";
+                        $nombres[] = substr($sheetData[$row]['N'],0,$pos);
+                        $nombres[] = substr($sheetData[$row]['N'],$pos+1);
+                        $apellidos[] = substr($sheetData[$row]['O'],0,$pos2);
+                        $apellidos[] = substr($sheetData[$row]['O'],$pos2+1);
+                    } else {
+                        $nombres[] = $sheetData[$row]['N'];
+                        $apellidos[] = $sheetData[$row]['O'];
+                    }
+
+                    // Search Instructor en BD y obtener su id
+                    for ($j=0; $j < count($nombres); $j++) { 
+                        $instr = new Instructor();
+                        $instr = Instructor::find()
+                            // ->andFilterWhere(['like' ,'name', $nombres[$j]])
+                            ->andFilterWhere(['like' ,'last_name', $apellidos[$j]])
+                            ->one();
+                        if ($instr) {
+                            // echo "si existe";
+                            $instr_sub = new InstructorSubject();
+                            $instr_sub->id_instructor = $instr->id;
+                            $instr_sub->id_subject = $newSubject->id;
+                            $instr_sub->save();
+                        }else{
+                            // echo "no existe";
+                            $profeError[] = $nombres[$j]." ".$apellidos[$j];
+                        }
+                    }
+                }
+            }
+
+                    echo "Los siguientes profesores no se encontraron en la base de datos:";
+                    echo '<br/>';
+                    // echo($profeError);
+                    echo '<br/>';
+
+                    foreach($profeError as $result) {
+                        echo $result, '<br>';
+                    }
+
         }
         catch(Exeption $e) {
-            die('Error');
+            die('Error loading file: '.$e->getMessage());
         }
-        $sheetIndex = 0;
-        $objReader->setLoadSheetsOnly($sheetnames[$sheetIndex]);
-        $objPHPExcel = $objReader->load($inputFile);
-        $sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
-        print_r($sheetData[2]['B']);
 
-        $sheetIndex = 4;
-        $objReader->setLoadSheetsOnly($sheetnames[$sheetIndex]);
-        $objPHPExcel2 = $objReader->load($inputFile);
-        $sheetData2 = $objPHPExcel2->getActiveSheet()->toArray(null,true,true,true);
-        print_r($sheetData2[2]['B']);
-
-        // First sheet
-        // $sheet = $objPHPExcel->getSheet(0);
-        // $highestRow = $sheet->getHighestRow();
-        // $highestColumn = $sheet->getHighestColumn();
-        // for ($row=2; $row <= 3 ; $row++) { 
-        //     # code...
-        //     $newSubject = new Subject();
-        //     $newSubject->name = $sheetData[$row]['B'];
-        //     $newSubject->sp = $sheetData[$row]['C'];
-        //     $newSubject->model = $sheetData[$row]['H'];
-        //     $newSubject->semester = $sheetData[$row]['D'];
-        //     $newSubject->save();
-
-        // }
-        echo "First sheet...Done!";
-
-        // Fifth sheet
-        // $sheetIndex = 4;
-        // $objReader->setLoadSheetsOnly($sheetnames[$sheetIndex]);
-        // $objPHPExcel = $objReader->load($inputFile);
-        // $sheetData = $objPHPExcel->getSheet(4)->toArray(null,true,true,true);
-
-        // for ($row=2; $row <= 10 ; $row++) { 
-        //     $newInstructor = new Instructor();
-        //     $newInstructor->name = $sheetData[$row]['C'];
-        //     $newInstructor->last_name = $sheetData[$row]['D'];
-        //     $newInstructor->save();
-        //     echo "Done!";
-        // }
     }
     /**
      * Updates an existing Semester model.
