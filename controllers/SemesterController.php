@@ -100,10 +100,23 @@ class SemesterController extends Controller
             // print_r($highestRow);
 
             for ($row=2; $row <= $highestRow ; $row++) { 
+                // $newInstructor = new Instructor();
+                // $newInstructor->name = $sheetData[$row]['C'];
+                // $newInstructor->last_name = $sheetData[$row]['D'];
+                // $newInstructor->save();
+
                 $newInstructor = new Instructor();
-                $newInstructor->name = $sheetData[$row]['C'];
-                $newInstructor->last_name = $sheetData[$row]['D'];
-                $newInstructor->save();
+                $newInstructor = Instructor::find()
+                    ->andFilterWhere(['like' ,'name', $sheetData[$row]['C']])
+                    ->andFilterWhere(['like' ,'last_name', $sheetData[$row]['D']])
+                    ->one();
+                if ($newInstructor == false) {
+                    // echo "no existe";
+                    $newInstructor = new Instructor();
+                    $newInstructor->name = $sheetData[$row]['C'];
+                    $newInstructor->last_name = $sheetData[$row]['D'];
+                    $newInstructor->save();
+                }
             }
             echo "Instructors Done!";
             echo '<br/>';
@@ -121,6 +134,16 @@ class SemesterController extends Controller
                 $highestRow = $objPHPExcel->getSheet(0)->getHighestRow();
 
                 for ($row=2; $row <= $highestRow ; $row++) { 
+                $newSubject = new Subject();
+                $newSubject = Subject::find()
+                    ->andFilterWhere(['name' => $sheetData[$row]['B']])
+                    ->andFilterWhere(['sp' => $sheetData[$row]['C']])
+                    ->andFilterWhere(['model' => array_search($sheetData[$row]['H'],$modelos) ])
+                    ->andFilterWhere(['semester' => (int)str_replace("°", "", $sheetData[$row]['D']) ])
+                    ->andFilterWhere(['modality' => $sheetData[$row]['G']])
+                    // ->filterWhere(['type' => $sheetData[$row]['B']])
+                    ->one();
+                if ($newSubject == false) {
                     $newSubject = new Subject();
                     $newSubject->name = (string)$sheetData[$row]['B'];
                     $newSubject->sp = (string)$sheetData[$row]['C'];
@@ -130,6 +153,20 @@ class SemesterController extends Controller
                     // $newSubject->type = (string)$sheetnames[$i];
                     $newSubject->type = "TEMP";
                     $newSubject->save();
+                }else{
+                    continue;
+                }
+                        echo '<br/>';
+                               print_r($newSubject->sp);
+                    // $newSubject = new Subject();
+                    // $newSubject->name = (string)$sheetData[$row]['B'];
+                    // $newSubject->sp = (string)$sheetData[$row]['C'];
+                    // $newSubject->model = array_search($sheetData[$row]['H'],$modelos);
+                    // $newSubject->semester = (int)str_replace("°", "", $sheetData[$row]['D']);
+                    // $newSubject->modality = (string)$sheetData[$row]['G'];
+                    // // $newSubject->type = (string)$sheetnames[$i];
+                    // $newSubject->type = "TEMP";
+                    // $newSubject->save();
 
                     // Identificar si las materia es impartida por dos profesores
                     $pos = strpos($sheetData[$row]['N'], '/');
