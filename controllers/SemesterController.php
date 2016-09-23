@@ -11,6 +11,8 @@ use yii\filters\VerbFilter;
 use app\models\Subject;
 use app\models\Instructor;
 use app\models\InstructorSubject;
+use app\models\ProgramSubject;
+use app\models\StudyProgram;
 
 /**
  * SemesterController implements the CRUD actions for Semester model.
@@ -118,14 +120,21 @@ class SemesterController extends Controller
                     $newInstructor->save();
                 }
             }
-            echo "Instructors Done!";
+            echo "...Instructors Done!";
             echo '<br/>';
             //covertir MEFI en 0
-             $modelos = array('0' => 'MEFI','1' => 'MEyA', '2'=> 'MEFI-MEyA');
+            $modelos = array('0' => 'MEFI','1' => 'MEyA', '2'=> 'MEFI-MEyA');
+            $programasEduc = StudyProgram::find()
+                    ->asArray()
+                    ->all();
+            // print_r($customers[0]['name']);
+
+
+
 
             for ($i=0; $i < 2 ; $i++) { 
-                    print_r($sheetnames[$i]);
-                    echo '<br/>';
+                print_r($sheetnames[$i]);
+                echo '<br/>';
 
                 $objReader->setLoadSheetsOnly($sheetnames[$i]);
                 $objReader->setReadDataOnly(true);
@@ -134,6 +143,16 @@ class SemesterController extends Controller
                 $highestRow = $objPHPExcel->getSheet(0)->getHighestRow();
 
                 for ($row=2; $row <= $highestRow ; $row++) { 
+
+
+                    // echo '<br/>';
+                    // print_r("No. ". $row.": ");
+                    // print_r($sheetData[$row]['C']);
+                    // print_r("   Sin numeros:");
+                    // print_r($words);
+                    // echo '<br/>';
+
+
                 $newSubject = new Subject();
                 $newSubject = Subject::find()
                     ->andFilterWhere(['name' => $sheetData[$row]['B']])
@@ -143,30 +162,39 @@ class SemesterController extends Controller
                     ->andFilterWhere(['modality' => $sheetData[$row]['G']])
                     // ->filterWhere(['type' => $sheetData[$row]['B']])
                     ->one();
-                if ($newSubject == false) {
-                    $newSubject = new Subject();
-                    $newSubject->name = (string)$sheetData[$row]['B'];
-                    $newSubject->sp = (string)$sheetData[$row]['C'];
-                    $newSubject->model = array_search($sheetData[$row]['H'],$modelos);
-                    $newSubject->semester = (int)str_replace("°", "", $sheetData[$row]['D']);
-                    $newSubject->modality = (string)$sheetData[$row]['G'];
-                    // $newSubject->type = (string)$sheetnames[$i];
-                    $newSubject->type = "TEMP";
-                    $newSubject->save();
-                }else{
-                    continue;
-                }
-                        echo '<br/>';
-                               print_r($newSubject->sp);
-                    // $newSubject = new Subject();
-                    // $newSubject->name = (string)$sheetData[$row]['B'];
-                    // $newSubject->sp = (string)$sheetData[$row]['C'];
-                    // $newSubject->model = array_search($sheetData[$row]['H'],$modelos);
-                    // $newSubject->semester = (int)str_replace("°", "", $sheetData[$row]['D']);
-                    // $newSubject->modality = (string)$sheetData[$row]['G'];
-                    // // $newSubject->type = (string)$sheetnames[$i];
-                    // $newSubject->type = "TEMP";
-                    // $newSubject->save();
+
+                    if ($newSubject == false) {
+                        $newSubject = new Subject();
+                        $newSubject->name = (string)$sheetData[$row]['B'];
+                        $newSubject->sp = (string)$sheetData[$row]['C'];
+                        $newSubject->model = array_search($sheetData[$row]['H'],$modelos);
+                        $newSubject->semester = (int)str_replace("°", "", $sheetData[$row]['D']);
+                        $newSubject->modality = (string)$sheetData[$row]['G'];
+                        // $newSubject->type = (string)$sheetnames[$i];
+                        $newSubject->type = "TEMP";
+                        $newSubject->save();
+                    }else{
+                        continue;
+                    }
+
+                //Limpiar formato de PE
+                    $words = $sheetData[$row]['C'];
+                    $words = preg_replace('/[0-9]+/', '', $words);
+                    $words = str_replace(array( '(', ')' ), '', $words);
+                // Buscar si en la columna PE existe en la BD
+                    foreach($programasEduc as $result) {
+                        if (strpos($words, $result['name']) === FALSE) {
+                            continue;
+                        }else{
+                            // echo '<br/>';
+                            // echo "Se encontro ".$result['name']." con id ".$result['id'];
+                            $prgm_sub = new ProgramSubject();
+                            $prgm_sub->id_program = $result['id'];
+                            $prgm_sub->id_subject = $newSubject->id;
+                            $prgm_sub->save();
+                        }
+                    }
+                    
 
                     // Identificar si las materia es impartida por dos profesores
                     $pos = strpos($sheetData[$row]['N'], '/');
