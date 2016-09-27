@@ -1,49 +1,31 @@
-<? php 
+
+<h1>Esta es la vista de <?php echo $section;?></h1><br>
+
+<?php 
+
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\helpers\BaseHtml;
-?>
 
-<!--
-<h1>Esta es la vista de <?php echo $section;?></h1>
-
-<?php foreach ($model as $instructor) {
-		echo "<h4>".$instructor->id.". ".$instructor->name." ".$instructor->last_name."<br>";
+foreach ($model as $instructor) {
+		//echo "<h4>".$instructor->id.". ".$instructor->name." ".$instructor->last_name."<br>";
+	    echo "<h4> Horario del profesor ".$instructor->name." ".$instructor->last_name."</h4> <br>";
+	    $materias = getIdClasses($instructor->id,$subjectstoinstructors);
+	   // print_r($materias);
+	    $teacherClasses = getInstructorClasses($materias,$clases);
+	    $horario=setSchedule();
+	    setClassesIntoSchedule($teacherClasses,$horario);
+        printMatrix($horario);
+        echo "<br> <br>";
+        unset($materias);
+        unset($teacherClasses);
 		}
-?>
 
-<h1> Estas son las materias registradas </h1>
-<?php foreach ($materias as $materia) {
-		echo "<h4>".$materia->id.". ".$materia->name."<br>";
-		}
-?>
-
-<h1> Estas son las clases registradas </h1>
-<?php foreach ($clases as $clase) {
-		echo "<h4>".$clase->id.", "."Materia: ".$clase->subject->name.", Salón: ".$clase->room->room.", Hora de inicio:".$clase->time_start."</h4>";
-		echo "<ul>";
-		foreach($clase->subject->instructorSubjects as $instructorSubject){
-			echo "<li>" . $instructorSubject->instructor->name . " " . $instructorSubject->instructor->last_name . "</li>";
-		}
-		echo "</ul>";
-	   //echo var_dump($clase->getIdSubject());
-		}
-?> 
- -->
-
-<?php
-//Prueba de los codigos que crean los horarios
-
-$horario=setSchedule();
-printMatrix($horario);
-?>
-
-<?php
 //Función que imprime los horarios
 function printMatrix($matrix){
 	$f=sizeof($matrix);
 	$c=sizeof($matrix[0]);
-	echo "<table>";
+	echo '<table  border="1">';
 for($i=0;$i<$f;$i++){
 	echo "<tr>";
 	for($j=0;$j<$c;$j++){
@@ -55,10 +37,8 @@ for($i=0;$i<$f;$i++){
 }
 echo "</table>";
 }
-?>
 
-<?php
-//Funcion que crea el horario
+//Esta función crea la tabla con los registros del maestro
 function setSchedule(){
 $schedules[0][0] = "Hora";
 $schedules[0][1] = "Lunes";
@@ -114,6 +94,171 @@ $schedules[8][2] = " ";
 $schedules[8][3] = " ";
 $schedules[8][4] = " ";
 $schedules[8][5] = " ";
+$schedules[9][0] = "11:00";
+$schedules[9][1] = " ";
+$schedules[9][2] = " ";
+$schedules[9][3] = " ";
+$schedules[9][4] = " ";
+$schedules[9][5] = " ";
+$schedules[10][0] = "11:30";
+$schedules[10][1] = " ";
+$schedules[10][2] = " ";
+$schedules[10][3] = " ";
+$schedules[10][4] = " ";
+$schedules[10][5] = " ";
+$schedules[11][0] = "12:00";
+$schedules[11][1] = " ";
+$schedules[11][2] = " ";
+$schedules[11][3] = " ";
+$schedules[11][4] = " ";
+$schedules[11][5] = " ";
+$schedules[12][0] = "12:30";
+$schedules[12][1] = " ";
+$schedules[12][2] = " ";
+$schedules[12][3] = " ";
+$schedules[12][4] = " ";
+$schedules[12][5] = " ";
+$schedules[13][0] = "13:00";
+$schedules[13][1] = " ";
+$schedules[13][2] = " ";
+$schedules[13][3] = " ";
+$schedules[13][4] = " ";
+$schedules[13][5] = " ";
+$schedules[14][0] = "13:30";
+$schedules[14][1] = " ";
+$schedules[14][2] = " ";
+$schedules[14][3] = " ";
+$schedules[14][4] = " ";
+$schedules[14][5] = " ";
+$schedules[15][0] = "14:00";
+$schedules[15][1] = " ";
+$schedules[15][2] = " ";
+$schedules[15][3] = " ";
+$schedules[15][4] = " ";
+$schedules[15][5] = " ";
+$schedules[16][0] = "14:30";
+$schedules[16][1] = " ";
+$schedules[16][2] = " ";
+$schedules[16][3] = " ";
+$schedules[16][4] = " ";
+$schedules[16][5] = " ";
+$schedules[17][0] = "15:00";
+$schedules[17][1] = " ";
+$schedules[17][2] = " ";
+$schedules[17][3] = " ";
+$schedules[17][4] = " ";
+$schedules[17][5] = " ";
+$schedules[18][0] = "15:30";
+$schedules[18][1] = " ";
+$schedules[18][2] = " ";
+$schedules[18][3] = " ";
+$schedules[18][4] = " ";
+$schedules[18][5] = " ";
+$schedules[19][0] = "16:00";
+$schedules[19][1] = " ";
+$schedules[19][2] = " ";
+$schedules[19][3] = " ";
+$schedules[19][4] = " ";
+$schedules[19][5] = " ";
+$schedules[20][0] = "16:30";
+$schedules[20][1] = " ";
+$schedules[20][2] = " ";
+$schedules[20][3] = " ";
+$schedules[20][4] = " ";
+$schedules[20][5] = " ";
+$schedules[21][0] = "17:00";
+$schedules[21][1] = " ";
+$schedules[21][2] = " ";
+$schedules[21][3] = " ";
+$schedules[21][4] = " ";
+$schedules[21][5] = " ";
+$schedules[22][0] = "17:30";
+$schedules[22][1] = " ";
+$schedules[22][2] = " ";
+$schedules[22][3] = " ";
+$schedules[22][4] = " ";
+$schedules[22][5] = " ";
+$schedules[23][0] = "18:00";
+$schedules[23][1] = " ";
+$schedules[23][2] = " ";
+$schedules[23][3] = " ";
+$schedules[23][4] = " ";
+$schedules[23][5] = " ";
+$schedules[24][0] = "18:30";
+$schedules[24][1] = " ";
+$schedules[24][2] = " ";
+$schedules[24][3] = " ";
+$schedules[24][4] = " ";
+$schedules[24][5] = " ";
+$schedules[25][0] = "19:00";
+$schedules[25][1] = " ";
+$schedules[25][2] = " ";
+$schedules[25][3] = " ";
+$schedules[25][4] = " ";
+$schedules[25][5] = " ";
+$schedules[26][0] = "19:30";
+$schedules[26][1] = " ";
+$schedules[26][2] = " ";
+$schedules[26][3] = " ";
+$schedules[26][4] = " ";
+$schedules[26][5] = " ";
 return $schedules;
 }
+
+//Esta función encuentra el id de las clases relacionadas con el profesor
+function getIdClasses($instructorId,$subjectstoinstructors){
+if($subjectstoinstructors){
+$classes = array();
+foreach ($subjectstoinstructors as $subjecttoinstructor){
+if($subjecttoinstructor->id_instructor===$instructorId){
+$classes[]= $subjecttoinstructor->id_subject;
+}}
+return $classes;}}
+
+
+
+//Esta función nos regresa un array de objetos classes, los cuales son las clases pertenecientes a ese instructor
+function getInstructorClasses($classesId,$clases){
+$teacherClasses = array();
+if($classesId){
+$classesSize = count($classesId);
+for($i=0;$i<=$classesSize-1;$i++){
+foreach ($clases as $clase) {
+	if($clase->id_subject===$classesId[$i]){
+	$teacherClasses[]=$clase;
+}}
+}}return $teacherClasses;}
+
+
+//Esta funcion llena el horario del maestro de acuerdo a los registros encontrados
+function setClassesIntoSchedule($teacherClasses,&$schedule){
+	$horas = [7.0,7.30,8.0,8.30,9.0,9.30,10.0,10.30,11.0,11.30,12.0,12.30,13.0,13.30,14.0,14.30,15.0,15.30,16.0,16.30,17.0,17.30,18.0,18.30,19.0,19.30,20.0,20.30,21.0,21.30,22.0,22.30];
+//De esta manera accedemos a los objetos encontrados por maestro
+if($teacherClasses){
+$indice=count($teacherClasses);
+	    for($i=0;$i<$indice;$i++){
+	    	for($j=0;$j<count($horas);$j++){
+	    		if(isInRange($horas[$j],$teacherClasses[$i]->time_start,$teacherClasses[$i]->time_end)){
+	    	$schedule[$j+1][$teacherClasses[$i]->day]= " Materia: ".$teacherClasses[$i]->subject->name."<br>"."Salón: ".$teacherClasses[$i]->room->room;
+	           }
+	    	} }	
+	    	   }}
+
+
+
+//esta función es auxiliar en la selección de filas para establecer los datos
+function isInRange($valor,$inf,$sup){
+$inferior=substr($inf,0,5);
+$superior=substr($sup,0,5);
+$inferior=str_replace(':', '.', $inferior);
+$superior=str_replace(':', '.', $superior);
+$inferior=floatval($inferior);
+$superior=floatval($superior);
+if($inferior<=$valor and $valor<=$superior) return true;
+else return false;
+}
+
+
 ?>
+
+
