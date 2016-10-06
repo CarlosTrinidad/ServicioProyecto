@@ -15,6 +15,8 @@ use Yii;
  */
 class ProgramSubject extends \yii\db\ActiveRecord
 {
+    public $programs;
+
     /**
      * @inheritdoc
      */
@@ -31,6 +33,7 @@ class ProgramSubject extends \yii\db\ActiveRecord
         return [
             [['id_subject', 'id_program'], 'required'],
             [['id_subject', 'id_program'], 'integer'],
+            [['programs'], 'each', 'rule'=>['integer']],
             [['id_program'], 'exist', 'skipOnError' => true, 'targetClass' => StudyProgram::className(), 'targetAttribute' => ['id_program' => 'id']],
             [['id_subject'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['id_subject' => 'id']],
         ];
@@ -46,7 +49,10 @@ class ProgramSubject extends \yii\db\ActiveRecord
             'id_program' => Yii::t('app', 'Id Program'),
         ];
     }
-
+    public static function primaryKey()
+    {
+        return ['id_subject'];
+    }
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -61,5 +67,35 @@ class ProgramSubject extends \yii\db\ActiveRecord
     public function getIdSubject()
     {
         return $this->hasOne(Subject::className(), ['id' => 'id_subject']);
+    }
+
+    public function saveAll(){
+        if( $this->validate() ){
+            if( !empty($this->programs) && is_array($this->programs) ){
+                ProgramSubject::deleteAll([
+                    'id_subject' => $this->id_subject,
+                ]);
+                foreach($this->programs as $program){
+                    $newProgramSubject = new ProgramSubject();
+                    $newProgramSubject->id_subject = $this->id_subject;
+                    $newProgramSubject->id_program = $program;
+                    $newProgramSubject->save(false);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public function getNamePrograms(){
+
+        $programSearch = ProgramSubject::find()->where(['id_subject' => $this->id_subject])->asArray()->all();
+        $strProgram = '';
+        foreach ($programSearch as $value) {
+            $programName = StudyProgram::find()->where(['id' => $value['id_program']])->one();
+           $arrProgram[] = $programName->name;
+        }
+        $strProgram = implode(", ", $arrProgram);
+        return $strProgram;
     }
 }
