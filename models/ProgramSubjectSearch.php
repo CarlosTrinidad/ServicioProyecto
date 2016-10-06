@@ -18,7 +18,7 @@ class ProgramSubjectSearch extends ProgramSubject
     public function rules()
     {
         return [
-            [['id_subject', 'id_program'], 'integer'],
+            [['id_subject', 'id_program'], 'safe'],
         ];
     }
 
@@ -55,12 +55,16 @@ class ProgramSubjectSearch extends ProgramSubject
             // $query->where('0=1');
             return $dataProvider;
         }
+        $query->joinWith(['idSubject','idProgram']);
 
         // grid filtering conditions
-        $query->andFilterWhere([
-            'id_subject' => $this->id_subject,
-            'id_program' => $this->id_program,
-        ]);
+        // $query->andFilterWhere([
+        //     'id_subject' => $this->id_subject,
+        //     'id_program' => $this->id_program,
+        // ]);
+
+        $query->andFilterWhere(['like', 'subject.name', $this->id_subject]);
+        $query->andFilterWhere(['like', 'study_program.name', $this->id_program]);
 
         return $dataProvider;
     }

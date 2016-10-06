@@ -40,8 +40,10 @@ $this->params['breadcrumbs'][] = $this->title;
              'attribute' => 'id_instructor',
              'label' => 'Instructor',
              'value' => function ($model) {
-                return $model->idInstructor->name. ' ' . $model->idInstructor->last_name;
+                return $model->getNameInstructors();
+                // return $model->idInstructor->name. ' ' . $model->idInstructor->last_name;
                 },
+
              ],
 
             // 'id_subject',

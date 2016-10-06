@@ -31,7 +31,12 @@ $this->params['breadcrumbs'][] = $this->title;
                           [
              'attribute' => 'id_program',
              'label' => 'Program',
-             'value' => 'idProgram.name'
+             'value' => 'idProgram.name',
+             // 'value' => $model->namePrograms,
+             'value' => function ($model) {
+                return $model->getNamePrograms();
+
+                },
              ],
             // 'id_subject',
             // 'idSubject.name',

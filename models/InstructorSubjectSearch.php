@@ -18,7 +18,7 @@ class InstructorSubjectSearch extends InstructorSubject
     public function rules()
     {
         return [
-            [['id_subject', 'id_instructor'], 'integer'],
+            [['id_subject', 'id_instructor'], 'safe'],
         ];
     }
 
@@ -55,12 +55,19 @@ class InstructorSubjectSearch extends InstructorSubject
             // $query->where('0=1');
             return $dataProvider;
         }
+        $query->joinWith(['idSubject','idInstructor']);
 
         // grid filtering conditions
-        $query->andFilterWhere([
-            'id_subject' => $this->id_subject,
-            'id_instructor' => $this->id_instructor,
-        ]);
+        // $query->andFilterWhere([
+            // 'id_subject' => $this->id_subject,
+            // 'id_instructor' => $this->id_instructor,
+        // ]);
+
+        $query->andFilterWhere(['like', 'subject.name', $this->id_subject]);
+        // $query->where(['like', 'instructor.name', $this->id_instructor]);
+        // $query->where(['like', 'instructor.last_name', $this->id_instructor]);
+        $query->andFilterWhere(['like', "concat(instructor.name,' ',instructor.last_name)", $this->id_instructor]);
+
 
         return $dataProvider;
     }
