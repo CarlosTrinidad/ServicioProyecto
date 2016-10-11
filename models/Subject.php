@@ -37,9 +37,9 @@ class Subject extends \yii\db\ActiveRecord
         return [
             [['name', 'sp', 'model', 'semester', 'type', 'modality'], 'required'],
             [['model', 'semester'], 'integer'],
-            [['name'], 'string', 'max' => 100],
+            [['name'], 'string', 'max' => 110],
             [['sp'], 'string', 'max' => 20],
-            [['type'], 'string', 'max' => 10],
+            [['type'], 'string', 'max' => 15],
             [['modality'], 'string', 'max' => 15],
         ];
     }

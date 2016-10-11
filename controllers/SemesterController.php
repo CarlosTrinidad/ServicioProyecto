@@ -132,7 +132,7 @@ class SemesterController extends Controller
 
 
 
-            for ($i=0; $i < 2 ; $i++) { 
+            for ($i=0; $i < 3 ; $i++) { 
                 print_r($sheetnames[$i]);
                 echo '<br/>';
 
@@ -149,7 +149,7 @@ class SemesterController extends Controller
                     // print_r("No. ". $row.": ");
                     // print_r($sheetData[$row]['C']);
                     // print_r("   Sin numeros:");
-                    // print_r($words);
+                    // print_r($highestRow);
                     // echo '<br/>';
 
 
@@ -167,11 +167,21 @@ class SemesterController extends Controller
                         $newSubject = new Subject();
                         $newSubject->name = (string)$sheetData[$row]['B'];
                         $newSubject->sp = (string)$sheetData[$row]['C'];
-                        $newSubject->model = array_search($sheetData[$row]['H'],$modelos);
+
+                        if (array_search($sheetData[$row]['H'],$modelos) == false) {
+                            $newSubject->model = 0;
+                        }else{
+                            $newSubject->model = array_search($sheetData[$row]['H'],$modelos);
+                        }
+
                         $newSubject->semester = (int)str_replace("°", "", $sheetData[$row]['D']);
-                        $newSubject->modality = (string)$sheetData[$row]['G'];
-                        // $newSubject->type = (string)$sheetnames[$i];
-                        $newSubject->type = "TEMP";
+
+                        if ($sheetData[$row]['G'] == null) {
+                            $newSubject->modality = "-";
+                        }else{
+                            $newSubject->modality = (string)$sheetData[$row]['G'];
+                        }
+                        $newSubject->type = (string)$sheetnames[$i];
                         $newSubject->save();
                     }else{
                         continue;
