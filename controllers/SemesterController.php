@@ -213,25 +213,40 @@ class SemesterController extends Controller
                         }else{
                             $newSubject->modality = (string)$sheetData[$row]['G'];
                         }
-                        $newSubject->type = (string)$sheetnames[$i];
+                        $newSubject->type = (string)trim($sheetnames[$i],'S');
                         $newSubject->save();
                     }else{
                         continue;
                     }
 
-                //Limpiar formato de PE
-                    $words = $sheetData[$row]['C'];
-                    $words = preg_replace('/[0-9]+/', '', $words);
-                    $words = str_replace(array( '(', ')' ), '', $words);
-                // Buscar si en la columna PE existe en la BD
-                    foreach($programasEduc as $result) {
-                        if (strpos($words, $result['name']) === FALSE) {
-                            continue;
-                        }else{
-                            $prgm_sub = new ProgramSubject();
-                            $prgm_sub->id_program = $result['id'];
-                            $prgm_sub->id_subject = $newSubject->id;
-                            $prgm_sub->save();
+
+                    //Si la materia es para cualquier materia
+                    $programas_opt = array("A", "IC", "CC", "IS", "E","M");
+
+                    if ($sheetData[$row]['C'] == 'FMAT' || $sheetData[$row]['C'] == 'Institucional') {
+                        foreach($programasEduc as $result) {
+                            if (in_array($result['name'], $programas_opt)) {
+                                $prgm_sub = new ProgramSubject();
+                                $prgm_sub->id_program = $result['id'];
+                                $prgm_sub->id_subject = $newSubject->id;
+                                $prgm_sub->save();
+                            }
+                        }
+                    }else{
+                    //Limpiar formato de PE
+                        $words = $sheetData[$row]['C'];
+                        $words = preg_replace('/[0-9]+/', '', $words);
+                        $words = str_replace(array( '(', ')' ), '', $words);
+                    // Buscar si en la columna PE existe en la BD
+                        foreach($programasEduc as $result) {
+                            if (strpos($words, $result['name']) === FALSE) {
+                                continue;
+                            }else{
+                                $prgm_sub = new ProgramSubject();
+                                $prgm_sub->id_program = $result['id'];
+                                $prgm_sub->id_subject = $newSubject->id;
+                                $prgm_sub->save();
+                            }
                         }
                     }
                     
@@ -253,10 +268,10 @@ class SemesterController extends Controller
                     }
 
                     // Search Instructor en BD y obtener su id
-                    for ($j=0; $j < count($nombres); $j++) { 
+                    for ($j=0; $j < count($apellidos); $j++) { 
                         $instr = new Instructor();
                         $instr = Instructor::find()
-                            ->andFilterWhere(['like' ,'last_name', $apellidos[$j]])
+                            ->andFilterWhere(['like' ,'last_name',trim($apellidos[$j])])
                             ->one();
                         if ($instr) {
                             // "si existe";
@@ -273,7 +288,6 @@ class SemesterController extends Controller
             }
 
                     echo "Los siguientes profesores no se encontraron en la base de datos:";
-                    echo '<br/>';
                     echo '<br/>';
 
                     foreach($profeError as $result) {
