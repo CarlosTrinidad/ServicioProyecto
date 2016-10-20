@@ -28,9 +28,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'sp',
             'model',
-            'semester',
             'type',
-            'modality',
+            // 'modality',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

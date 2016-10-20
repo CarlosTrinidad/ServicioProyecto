@@ -18,7 +18,7 @@ class SubjectSearch extends Subject
     public function rules()
     {
         return [
-            [['id', 'model', 'semester'], 'integer'],
+            [['id', 'model'], 'integer'],
             [['name', 'sp', 'type', 'modality'], 'safe'],
         ];
     }
@@ -61,7 +61,6 @@ class SubjectSearch extends Subject
         $query->andFilterWhere([
             'id' => $this->id,
             'model' => $this->model,
-            'semester' => $this->semester,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])

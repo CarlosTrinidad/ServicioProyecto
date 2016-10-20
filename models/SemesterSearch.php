@@ -18,7 +18,7 @@ class SemesterSearch extends Semester
     public function rules()
     {
         return [
-            [['id'], 'integer'],
+            [['id', 'study_program_id'], 'integer'],
             [['name'], 'safe'],
         ];
     }
@@ -60,6 +60,7 @@ class SemesterSearch extends Semester
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'study_program_id' => $this->study_program_id,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name]);
