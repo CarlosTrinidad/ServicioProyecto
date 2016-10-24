@@ -27,7 +27,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'My Company',
+        'brandLabel' => 'Schedules',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -36,9 +36,18 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
+            ['label' => 'Classes', 'url' => ['/classes/index']],
+            ['label' => 'Instructors', 'url' => ['/instructor/index']],
+            ['label' => 'InstructorSchedule', 'url' => ['/instructorschedule/index']],
+            ['label' => 'InstructorSubject', 'url' => ['/instructor-subject/index']],
+            ['label' => 'ProgramSubject', 'url' => ['/program-subject/index']],
+            ['label' => 'Rooms', 'url' => ['/room/index']],
+            ['label' => 'RoomSchedule', 'url' => ['/roomschedule/index']],
+            /*['label' => 'Schedule', 'url' => ['/schedule/index']],*/
+            ['label' => 'Semester', 'url' => ['/semester/index']],
+            ['label' => 'StudyProgram', 'url' => ['/study-program/index']],
+            ['label' => 'Subject', 'url' => ['/subject/index']],
+            /*['label' => 'Contact', 'url' => ['/site/contact']],*/
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]
             ) : (

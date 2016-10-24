@@ -6,13 +6,12 @@ use yii\helpers\BaseHtml;
 <h2>Listado de Salones</h2>
 <table border="1">
 <tr></tr>
- <tr><th>Horario</th><th>Nombre del salon</th><th>Capacidad</th></tr>
  <?php foreach ($model as $room) { ?>
-   <tr>
-   <td><?php echo $room->id ?></td>
-   <td><?php echo $room->room ?></td>
-   <td><?php echo $room->capacity ?></td>
-   </tr>
+ 	<table border="2">
+ 	<tbody>
+ 	<tr><td colspan="3">Room Name: <?php echo $room->room ?></td><td colspan="4">Room Capacity  <?php echo $room->capacity ?></td></tr>
+ 	<tr><td>Horario</td><td>Lunes</td><td>Martes</td><td>Miércoles</td><td>Jueves</td><td>Viernes</td><td>Sábado</td></tr>
+ 	<br>
  <?php } ?>
 </table>
 
@@ -20,7 +19,7 @@ use yii\helpers\BaseHtml;
 <?php foreach ($clases as $classes) { ?>
 <table border="1">
 <tbody>
-	<tr><td colspan="7"><?php echo $classes->id_room ?></td></tr>
+	<tr><td colspan="7"><?php echo $room->room ?></td></tr>
 	<tr><td>Horario</td><td>Lunes</td><td>Martes</td><td>Miércoles</td><td>Jueves</td><td>Viernes</td><td>Sábado</td></tr>
 </tbody>
 <br>
@@ -28,15 +27,7 @@ use yii\helpers\BaseHtml;
 </table>
 
 
-<h2>Listado de Clases</h2>
-<table border="1">
-<tr><th>Nombre de Clase</th></tr>
-<?php foreach ($clases as $classes) { ?>
-<tr>
-<td><?php echo $classes->id_subject ?> <?php echo $classes->id_room ?></td>
-</tr>
-<?php } ?>
-</table>
+
 <center><h1>Horario Agosto - Diciembre 2016 - Vista de <?php echo $section;?></h1></center><br>
 <?php
 $classes_arr = array(
