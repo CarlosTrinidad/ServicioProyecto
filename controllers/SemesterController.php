@@ -78,189 +78,7 @@ class SemesterController extends Controller
             ]);
         }
     }
-    public function actionImportExcel(){
-        ini_set('memory_limit', '-1');
-        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
 
-        $inputFile = "./files/import.xlsx";
-        $profeError = array();
-
-        try{
-            // $sheetIndex = 0;
-            // Fifth sheet (PROFESORES)
-            $i=4;
-            $inputFileType = \PHPExcel_IOFactory::identify($inputFile);
-            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
-            $sheetnames = $objReader->listWorksheetNames($inputFile);
-            $objReader->setLoadSheetsOnly($sheetnames[$i]);
-            print_r($sheetnames[$i]);
-            $objReader->setReadDataOnly(true);
-            $objPHPExcel = $objReader->load($inputFile);
-			// var_dump($objPHPExcel);
-            $sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
-            // var_dump($sheetData);
-            $highestRow = $objPHPExcel->getSheet(0)->getHighestRow();
-            // print_r($highestRow);
-
-            for ($row=2; $row <= $highestRow ; $row++) { 
-                // $newInstructor = new Instructor();
-                // $newInstructor->name = $sheetData[$row]['C'];
-                // $newInstructor->last_name = $sheetData[$row]['D'];
-                // $newInstructor->save();
-
-                $newInstructor = new Instructor();
-                $newInstructor = Instructor::find()
-                    ->andFilterWhere(['like' ,'name', $sheetData[$row]['C']])
-                    ->andFilterWhere(['like' ,'last_name', $sheetData[$row]['D']])
-                    ->one();
-                if ($newInstructor == false) {
-                    // echo "no existe";
-                    $newInstructor = new Instructor();
-                    $newInstructor->name = $sheetData[$row]['C'];
-                    $newInstructor->last_name = $sheetData[$row]['D'];
-                    $newInstructor->save();
-                }
-            }
-            echo "...Instructors Done!";
-            echo '<br/>';
-            //covertir MEFI en 0
-            $modelos = array('0' => 'MEFI','1' => 'MEyA', '2'=> 'MEFI-MEyA');
-            $programasEduc = StudyProgram::find()
-                    ->asArray()
-                    ->all();
-            // print_r($customers[0]['name']);
-
-
-
-
-            for ($i=0; $i < 3 ; $i++) { 
-                print_r($sheetnames[$i]);
-                echo '<br/>';
-
-                $objReader->setLoadSheetsOnly($sheetnames[$i]);
-                $objReader->setReadDataOnly(true);
-                $objPHPExcel = $objReader->load($inputFile);
-                $sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
-                $highestRow = $objPHPExcel->getSheet(0)->getHighestRow();
-
-                for ($row=2; $row <= $highestRow ; $row++) { 
-
-
-                    // echo '<br/>';
-                    // print_r("No. ". $row.": ");
-                    // print_r($sheetData[$row]['C']);
-                    // print_r("   Sin numeros:");
-                    // print_r($highestRow);
-                    // echo '<br/>';
-
-
-                $newSubject = new Subject();
-                $newSubject = Subject::find()
-                    ->andFilterWhere(['name' => $sheetData[$row]['B']])
-                    ->andFilterWhere(['sp' => $sheetData[$row]['C']])
-                    ->andFilterWhere(['model' => array_search($sheetData[$row]['H'],$modelos) ])
-                    ->andFilterWhere(['semester' => (int)str_replace("°", "", $sheetData[$row]['D']) ])
-                    ->andFilterWhere(['modality' => $sheetData[$row]['G']])
-                    // ->filterWhere(['type' => $sheetData[$row]['B']])
-                    ->one();
-
-                    if ($newSubject == false) {
-                        $newSubject = new Subject();
-                        $newSubject->name = (string)$sheetData[$row]['B'];
-                        $newSubject->sp = (string)$sheetData[$row]['C'];
-
-                        if (array_search($sheetData[$row]['H'],$modelos) == false) {
-                            $newSubject->model = 0;
-                        }else{
-                            $newSubject->model = array_search($sheetData[$row]['H'],$modelos);
-                        }
-
-                        $newSubject->semester = (int)str_replace("°", "", $sheetData[$row]['D']);
-
-                        if ($sheetData[$row]['G'] == null) {
-                            $newSubject->modality = "-";
-                        }else{
-                            $newSubject->modality = (string)$sheetData[$row]['G'];
-                        }
-                        $newSubject->type = (string)$sheetnames[$i];
-                        $newSubject->save();
-                    }else{
-                        continue;
-                    }
-
-                //Limpiar formato de PE
-                    $words = $sheetData[$row]['C'];
-                    $words = preg_replace('/[0-9]+/', '', $words);
-                    $words = str_replace(array( '(', ')' ), '', $words);
-                // Buscar si en la columna PE existe en la BD
-                    foreach($programasEduc as $result) {
-                        if (strpos($words, $result['name']) === FALSE) {
-                            continue;
-                        }else{
-                            // echo '<br/>';
-                            // echo "Se encontro ".$result['name']." con id ".$result['id'];
-                            $prgm_sub = new ProgramSubject();
-                            $prgm_sub->id_program = $result['id'];
-                            $prgm_sub->id_subject = $newSubject->id;
-                            $prgm_sub->save();
-                        }
-                    }
-                    
-
-                    // Identificar si las materia es impartida por dos profesores
-                    $pos = strpos($sheetData[$row]['N'], '/');
-                    $pos2 = strpos($sheetData[$row]['O'], '/');
-                    $nombres = array();
-                    $apellidos = array();
-
-                    if ($pos !== false) {
-                        // echo "La cadena fue encontrada en la cadena";
-                        // echo " y existe en la posición $pos";
-                        $nombres[] = substr($sheetData[$row]['N'],0,$pos);
-                        $nombres[] = substr($sheetData[$row]['N'],$pos+1);
-                        $apellidos[] = substr($sheetData[$row]['O'],0,$pos2);
-                        $apellidos[] = substr($sheetData[$row]['O'],$pos2+1);
-                    } else {
-                        $nombres[] = $sheetData[$row]['N'];
-                        $apellidos[] = $sheetData[$row]['O'];
-                    }
-
-                    // Search Instructor en BD y obtener su id
-                    for ($j=0; $j < count($nombres); $j++) { 
-                        $instr = new Instructor();
-                        $instr = Instructor::find()
-                            // ->andFilterWhere(['like' ,'name', $nombres[$j]])
-                            ->andFilterWhere(['like' ,'last_name', $apellidos[$j]])
-                            ->one();
-                        if ($instr) {
-                            // echo "si existe";
-                            $instr_sub = new InstructorSubject();
-                            $instr_sub->id_instructor = $instr->id;
-                            $instr_sub->id_subject = $newSubject->id;
-                            $instr_sub->save();
-                        }else{
-                            // echo "no existe";
-                            $profeError[] = $nombres[$j]." ".$apellidos[$j];
-                        }
-                    }
-                }
-            }
-
-                    echo "Los siguientes profesores no se encontraron en la base de datos:";
-                    echo '<br/>';
-                    // echo($profeError);
-                    echo '<br/>';
-
-                    foreach($profeError as $result) {
-                        echo $result, '<br>';
-                    }
-
-        }
-        catch(Exeption $e) {
-            die('Error loading file: '.$e->getMessage());
-        }
-
-    }
     /**
      * Updates an existing Semester model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -308,4 +126,239 @@ class SemesterController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+     /**
+     * Import the Semester data based on import.xlsx.
+     */   
+    public function actionImportExcel(){
+        ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+
+        $inputFile = "./files/import.xlsx";
+        $profeError = array();
+
+        try{
+            // Fifth sheet (PROFESORES)
+            $i=4;
+            $inputFileType = \PHPExcel_IOFactory::identify($inputFile);
+            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            $sheetnames = $objReader->listWorksheetNames($inputFile);
+            $objReader->setLoadSheetsOnly($sheetnames[$i]);
+            print_r($sheetnames[$i]);
+            $objReader->setReadDataOnly(true);
+            $objPHPExcel = $objReader->load($inputFile);
+			// var_dump($objPHPExcel);
+            $sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+            $highestRow = $objPHPExcel->getSheet(0)->getHighestRow();
+
+            for ($row=2; $row <= $highestRow ; $row++) { 
+
+                $newInstructor = new Instructor();
+                $newInstructor = Instructor::find()
+                    ->andFilterWhere(['like' ,'name', $sheetData[$row]['C']])
+                    ->andFilterWhere(['like' ,'last_name', $sheetData[$row]['D']])
+                    ->one();
+                if ($newInstructor == false) {
+                    // echo "no existe";
+                    $newInstructor = new Instructor();
+                    $newInstructor->name = $sheetData[$row]['C'];
+                    $newInstructor->last_name = $sheetData[$row]['D'];
+                    $newInstructor->save();
+                }
+            }
+            echo "...Instructors Done!";
+            echo '<br/>';
+            //covertir MEFI en 0
+            $modelos = array('0' => 'MEFI','1' => 'MEyA', '2'=> 'MEFI-MEyA');
+            $programasEduc = StudyProgram::find()
+                    ->asArray()
+                    ->all();
+
+            for ($i=0; $i < 3 ; $i++) { 
+                print_r($sheetnames[$i]);
+                echo '<br/>';
+
+                $objReader->setLoadSheetsOnly($sheetnames[$i]);
+                $objReader->setReadDataOnly(true);
+                $objPHPExcel = $objReader->load($inputFile);
+                $sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+                $highestRow = $objPHPExcel->getSheet(0)->getHighestRow();
+
+                for ($row=2; $row <= $highestRow ; $row++) { 
+
+                $newSubject = new Subject();
+                $newSubject = Subject::find()
+                    ->andFilterWhere(['name' => $sheetData[$row]['B']])
+                    ->andFilterWhere(['sp' => $sheetData[$row]['C']])
+                    ->andFilterWhere(['model' => array_search($sheetData[$row]['H'],$modelos) ])
+                    // ->andFilterWhere(['semester' => (int)str_replace("°", "", $sheetData[$row]['D']) ])
+                    ->andFilterWhere(['modality' => $sheetData[$row]['G']])
+                    // ->filterWhere(['type' => $sheetData[$row]['B']])
+                    ->one();
+
+                    if ($newSubject == false) {
+                        $newSubject = new Subject();
+                        $newSubject->name = (string)$sheetData[$row]['B'];
+                        $newSubject->sp = (string)$sheetData[$row]['C'];
+
+                        if (array_search($sheetData[$row]['H'],$modelos) == false) {
+                            $newSubject->model = 0;
+                        }else{
+                            $newSubject->model = array_search($sheetData[$row]['H'],$modelos);
+                        }
+
+                        // $newSubject->semester = (int)str_replace("°", "", $sheetData[$row]['D']);
+
+                        if ($sheetData[$row]['G'] == null) {
+                            $newSubject->modality = "-";
+                        }else{
+                            $newSubject->modality = (string)$sheetData[$row]['G'];
+                        }
+                        $newSubject->type = (string)trim($sheetnames[$i],'S');
+                        $newSubject->save();
+                    }else{
+                        continue;
+                    }
+
+
+                    //Si la materia es para cualquier materia
+                    $programas_opt = array("A", "IC", "CC", "IS", "E","M");
+
+                    if ($sheetData[$row]['C'] == 'FMAT' || $sheetData[$row]['C'] == 'Institucional') {
+                        foreach($programasEduc as $result) {
+                            if (in_array($result['name'], $programas_opt)) {
+                                $prgm_sub = new ProgramSubject();
+                                $prgm_sub->id_program = $result['id'];
+                                $prgm_sub->id_subject = $newSubject->id;
+                                $prgm_sub->save();
+                            }
+                        }
+                    }else{
+                    //Limpiar formato de PE
+                        $words = $sheetData[$row]['C'];
+                        $words = preg_replace('/[0-9]+/', '', $words);
+                        $words = str_replace(array( '(', ')' ), '', $words);
+                    // Buscar si en la columna PE existe en la BD
+                        foreach($programasEduc as $result) {
+                            if (strpos($words, $result['name']) === FALSE) {
+                                continue;
+                            }else{
+                                $prgm_sub = new ProgramSubject();
+                                $prgm_sub->id_program = $result['id'];
+                                $prgm_sub->id_subject = $newSubject->id;
+                                $prgm_sub->save();
+                            }
+                        }
+                    }
+                    
+
+                    // Identificar si las materia es impartida por dos profesores
+                    $pos = strpos($sheetData[$row]['N'], '/');
+                    $pos2 = strpos($sheetData[$row]['O'], '/');
+                    $nombres = array();
+                    $apellidos = array();
+
+                    if ($pos !== false) {
+                        $nombres[] = substr($sheetData[$row]['N'],0,$pos);
+                        $nombres[] = substr($sheetData[$row]['N'],$pos+1);
+                        $apellidos[] = substr($sheetData[$row]['O'],0,$pos2);
+                        $apellidos[] = substr($sheetData[$row]['O'],$pos2+1);
+                    } else {
+                        $nombres[] = $sheetData[$row]['N'];
+                        $apellidos[] = $sheetData[$row]['O'];
+                    }
+
+                    // Search Instructor en BD y obtener su id
+                    for ($j=0; $j < count($apellidos); $j++) { 
+                        $instr = new Instructor();
+                        $instr = Instructor::find()
+                            ->andFilterWhere(['like' ,'last_name',trim($apellidos[$j])])
+                            ->one();
+                        if ($instr) {
+                            // "si existe";
+                            $instr_sub = new InstructorSubject();
+                            $instr_sub->id_instructor = $instr->id;
+                            $instr_sub->id_subject = $newSubject->id;
+                            $instr_sub->save();
+                        }else{
+                            //  "no existe";
+                            $profeError[] = $nombres[$j]." ".$apellidos[$j];
+                        }
+                    }
+                }
+            }
+
+                    echo "Los siguientes profesores no se encontraron en la base de datos:";
+                    echo '<br/>';
+
+                    foreach($profeError as $result) {
+                        echo $result, '<br>';
+                    }
+        }
+        catch(Exeption $e) {
+            die('Error loading file: '.$e->getMessage());
+        }
+
+    }
+    
+    public function actionExportExcel(){
+                /** Include PHPExcel */
+ 
+        // Here is the sample array of data
+        $hearderAsignaturas = array(
+            'Id',
+            'Obligatoria/Optativa/Libre/Taller',
+            'Asignatura',
+            'Programa',
+            'Semestre',
+            'Modalidad',
+            'Modelo',
+            'Nombres',
+            'Apellidos',
+            'Lunes',
+            'Martes',
+            'Miércoles',
+            'Jueves',
+            'Viernes',
+            'Sábado');
+ 
+        // Create new PHPExcel object
+        $objPHPExcel = new \PHPExcel();
+        
+        // Fill worksheet from values in array
+        $objPHPExcel->getActiveSheet()->fromArray($hearderAsignaturas, null, 'A1');
+        $sheet = $objPHPExcel->getActiveSheet();
+        // Rename worksheet
+        $sheet->setTitle('Asignaturas');
+        // Add style
+        $header = 'a1:o1';
+        $sheet->getStyle($header)->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('b1b1b1');
+        $style = array(
+            'font' => array('bold' => true,),
+            'alignment' => array('horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,),
+            );
+        $sheet->getStyle($header)->applyFromArray($style);
+        // Set AutoSize for asignaturas and email modalidad
+        $sheet->getColumnDimension('B')->setAutoSize(true);
+        $sheet->getColumnDimension('C')->setAutoSize(true);
+        
+        
+        $asignatura = new Subject();
+        $asignatura = Subject::find()->all();
+        $sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+
+        foreach ($asignatura as $key) {
+            $highestRow = $objPHPExcel->getSheet(0)->getHighestRow();
+            print_r($highestRow);
+            $sheetData[1]['C'] = $key->name;
+
+            // for ($row=2; $row <= $highestRow ; $row++) { 
+            //         $sheetData[$row]['C'] = $key->name;
+            // }
+        }
+        // Save Excel 2007 file
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save('MyExcel.xlsx');
+    }
+
 }

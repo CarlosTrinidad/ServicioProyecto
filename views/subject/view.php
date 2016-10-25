@@ -32,7 +32,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'sp',
             'model',
-            'semester',
             'type',
             'modality',
         ],

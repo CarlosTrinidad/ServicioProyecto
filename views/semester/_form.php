@@ -21,6 +21,8 @@ use app\models\StudyProgram;
 		['prompt'=>'Select Study Program']
 	) ?>
 
+    <?= $form->field($model, 'study_program_id')->textInput() ?>
+
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

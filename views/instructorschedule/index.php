@@ -6,38 +6,65 @@
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\helpers\BaseHtml;
+use yii\helpers\registerCss;
 
+
+// Este helper nos permite darle estilos a las tablas
+$this->registerCss("table {width: 80%; margin: 0 auto; } td.c{background-color:#1cd9e6;}  td{width: 13%; text-align: center;} td.rw{background-color:#b9c9fe;} .emptyRow{ background-color:#e8edff;}");
+
+// Solo se mostraran los horarios de los profesores que si tienen clases asignadas
 foreach ($model as $instructor) {
-		//echo "<h4>".$instructor->id.". ".$instructor->name." ".$instructor->last_name."<br>";
+        $idmaterias = getIdClasses($instructor->id,$subjectstoinstructors);
+		$teacherClasses = getInstructorClasses($idmaterias,$clases);
+        if($teacherClasses){
 	    echo "<h4> Horario del profesor ".$instructor->name." ".$instructor->last_name."</h4> <br>";
-	    $materias = getIdClasses($instructor->id,$subjectstoinstructors);
-	   // print_r($materias);
-	    $teacherClasses = getInstructorClasses($materias,$clases);
-	    $horario=setSchedule();
-	    setClassesIntoSchedule($teacherClasses,$horario);
+	    $horario=setSchedule($interval);
+	    setClassesIntoSchedule2($teacherClasses,$horario);
+        echo "<br>";
         printMatrix($horario);
         echo "<br> <br>";
+        //printMat($horario);
         unset($materias);
-        unset($teacherClasses);
+        unset($teacherClasses);}
 		}
 
 //Función que imprime los horarios
 function printMatrix($matrix){
 	$f=sizeof($matrix);
 	$c=sizeof($matrix[0]);
-	echo '<table  border="1">';
+	echo '<table  border="1" width: 100% class="ScheduleTable">';
 for($i=0;$i<$f;$i++){
 	echo "<tr>";
 	for($j=0;$j<$c;$j++){
+<<<<<<< HEAD
 		echo "<td>";
 	echo $matrix[$i][$j];
 		echo "</td>";	
+=======
+		if($i==0 or $j==0){
+			echo '<td class="rw">';
+	        echo $matrix[$i][$j];
+		    echo "</td>";	}
+		    else{
+            if($matrix[$i-1][$j]!=$matrix[$i][$j] and $matrix[$i][$j]!=" "){
+            $size = getSubjectLength($matrix,$i,$j);
+            echo '<td rowspan="'.$size.'" class="c">';
+	        echo $matrix[$i][$j];//$matrix[$i][$j];
+		    echo "</td>";
+            }else{
+            	if($matrix[$i][$j]==" "){
+            echo '<td class="emptyRow">';
+	        echo $matrix[$i][$j];
+		    echo "</td>";}            
+            } }			
+>>>>>>> b0a001c9faad4ab679a5fae2392168fc2fe9cc85
 	}
 	echo "</tr>";
 }
 echo "</table>";
 }
 
+<<<<<<< HEAD
 //Esta función crea la tabla con los registros del maestro
 function setSchedule(){
 $schedules[0][0] = "Hora";
@@ -203,6 +230,43 @@ $schedules[26][3] = " ";
 $schedules[26][4] = " ";
 $schedules[26][5] = " ";
 return $schedules;
+=======
+// esta funcion imprime la tabla logica del horario
+function printMat($matrix){
+    $f=sizeof($matrix);
+    $c=sizeof($matrix[0]);
+    echo '<table  border="1">';
+    for($i=0;$i<$f;$i++){
+    echo "<tr>";
+    for($j=0;$j<$c;$j++){
+        echo "<td>";
+            echo $matrix[$i][$j];
+            echo "</td>";   
+    }
+echo "</tr>";}
+echo "</table>";
+}
+
+// Esta función crea el horario formato base del horario
+function setSchedule($intv){
+	$col = 6;
+	$schedules[0][0] = "Horas";
+	$schedules[0][1] = "Lunes";
+    $schedules[0][2] = "Martes";
+    $schedules[0][3] = "Miercoles";
+    $schedules[0][4] = "Jueves";
+    $schedules[0][5] = "Viernes";
+    for($i=0;$i<$col;$i++){
+    foreach ($intv as $interval) {
+    	if($i==0){
+    		$schedules[$interval->id][$i] = substr($interval->schedule,0,5);// schedule tiene el formato time (7:00:00), con substr simplificamos este formato (7:00)
+    	}else{
+    		$schedules[$interval->id][$i] = " ";
+    	}
+    }
+    }
+    return $schedules;
+>>>>>>> b0a001c9faad4ab679a5fae2392168fc2fe9cc85
 }
 
 //Esta función encuentra el id de las clases relacionadas con el profesor
@@ -237,6 +301,7 @@ function setClassesIntoSchedule($teacherClasses,&$schedule){
 if($teacherClasses){
 $indice=count($teacherClasses);
 	    for($i=0;$i<$indice;$i++){
+<<<<<<< HEAD
 	    	for($j=0;$j<count($horas);$j++){
 	    		if(isInRange($horas[$j],$teacherClasses[$i]->time_start,$teacherClasses[$i]->time_end)){
 	    	$schedule[$j+1][$teacherClasses[$i]->day]= " Materia: ".$teacherClasses[$i]->subject->name."<br>"."Salón: ".$teacherClasses[$i]->room->room;
@@ -256,6 +321,40 @@ $inferior=floatval($inferior);
 $superior=floatval($superior);
 if($inferior<=$valor and $valor<=$superior) return true;
 else return false;
+=======
+	    	$ini = false;
+	    	$fin = false;
+	    	for($j=0;$j<$f;$j++){
+            if($schedule[$j][0]==substr($teacherClasses[$i]->time_start,0,5)and !$fin) {
+            	$ini=true;
+            }else{
+            	if($schedule[$j][0]!=substr($teacherClasses[$i]->time_end,0,5) and $ini) {
+            	$ini=true;
+            	$fin=false;
+            }else{
+            		if($schedule[$j][0]==substr($teacherClasses[$i]->time_end,0,5) and $ini){
+            			$ini=false;
+            			$fin= true;
+            			$schedule[$j][$teacherClasses[$i]->day]= " Materia: ".$teacherClasses[$i]->idSubject->name."<br>"."Salón: ".$teacherClasses[$i]->idRoom->room;
+            		}
+            	}
+            }
+            if(!$fin and $ini) $schedule[$j][$teacherClasses[$i]->day]= " Materia: ".$teacherClasses[$i]->idSubject->name."<br>"."Salón: ".$teacherClasses[$i]->idRoom->room;
+	    	}
+	    }}}
+
+
+
+function getSubjectLength($matrix,$row,$column){
+$f=sizeof($matrix);
+$counter = 1;
+$stopCounting = false;
+	for($i=$row+1;$i<$f;$i++){
+        if($matrix[$i][$column]!=$matrix[$i-1][$column]) $stopCounting= true;
+		if($matrix[$i][$column]==$matrix[$row][$column] and $matrix[$i][$column]==$matrix[$i-1][$column] and !$stopCounting)$counter++;
+	}
+	return $counter;
+>>>>>>> b0a001c9faad4ab679a5fae2392168fc2fe9cc85
 }
 
 

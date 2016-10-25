@@ -23,9 +23,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'model') ?>
 
-    <?= $form->field($model, 'semester') ?>
-
-    <?php // echo $form->field($model, 'type') ?>
+    <?= $form->field($model, 'type') ?>
 
     <?php // echo $form->field($model, 'modality') ?>
 

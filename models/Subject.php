@@ -11,13 +11,14 @@ use Yii;
  * @property string $name
  * @property string $sp
  * @property integer $model
- * @property integer $semester
  * @property string $type
  * @property string $modality
  *
  * @property Classes[] $classes
  * @property InstructorSubject[] $instructorSubjects
  * @property ProgramSubject[] $programSubjects
+ * @property SubjectSemester[] $subjectSemesters
+ * @property Semester[] $semesters
  */
 class Subject extends \yii\db\ActiveRecord
 {
@@ -35,12 +36,11 @@ class Subject extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'sp', 'model', 'semester', 'type', 'modality'], 'required'],
-            [['model', 'semester'], 'integer'],
+            [['name', 'sp', 'type'], 'required'],
+            [['model'], 'integer'],
             [['name'], 'string', 'max' => 110],
             [['sp'], 'string', 'max' => 20],
-            [['type'], 'string', 'max' => 15],
-            [['modality'], 'string', 'max' => 15],
+            [['type', 'modality'], 'string', 'max' => 15],
         ];
     }
 
@@ -54,7 +54,6 @@ class Subject extends \yii\db\ActiveRecord
             'name' => Yii::t('app', 'Name'),
             'sp' => Yii::t('app', 'Sp'),
             'model' => Yii::t('app', 'Model'),
-            'semester' => Yii::t('app', 'Semester'),
             'type' => Yii::t('app', 'Type'),
             'modality' => Yii::t('app', 'Modality'),
         ];
@@ -82,5 +81,21 @@ class Subject extends \yii\db\ActiveRecord
     public function getProgramSubjects()
     {
         return $this->hasMany(ProgramSubject::className(), ['id_subject' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSubjectSemesters()
+    {
+        return $this->hasMany(SubjectSemester::className(), ['subject_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSemesters()
+    {
+        return $this->hasMany(Semester::className(), ['id' => 'semester_id'])->viaTable('subject_semester', ['subject_id' => 'id']);
     }
 }
