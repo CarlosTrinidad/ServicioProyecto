@@ -96,8 +96,9 @@ class SemesterController extends Controller
             print_r($sheetnames[$i]);
             $objReader->setReadDataOnly(true);
             $objPHPExcel = $objReader->load($inputFile);
+			// var_dump($objPHPExcel);
             $sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
-            // print_r($sheetData[2]['C']);
+            // var_dump($sheetData);
             $highestRow = $objPHPExcel->getSheet(0)->getHighestRow();
             // print_r($highestRow);
 

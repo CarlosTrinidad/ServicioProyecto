@@ -9,6 +9,7 @@ use Yii;
  *
  * @property integer $id
  * @property string $name
+ * @property integer $study_program_id
  */
 class Semester extends \yii\db\ActiveRecord
 {
@@ -26,8 +27,9 @@ class Semester extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name'], 'required'],
+            [['name', 'study_program_id'], 'required'],
             [['name'], 'string', 'max' => 20],
+			[['study_program_id'], 'exist', 'targetClass' => StudyProgram::className(), 'targetAttribute' => ['study_program_id' => 'id']],
         ];
     }
 
@@ -39,6 +41,15 @@ class Semester extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
+			'study_program_id' => Yii::t('app', 'Study Program'),
         ];
+    }
+	
+	/**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getStudyProgram()
+    {
+        return $this->hasOne(StudyProgram::className(), ['id' => 'study_program_id']);
     }
 }

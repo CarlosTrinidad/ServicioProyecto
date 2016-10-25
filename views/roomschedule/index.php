@@ -1,42 +1,8 @@
-<?php 
+<? php 
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\helpers\BaseHtml;
 ?>
-<h2>Listado de Salones</h2>
-<table border="1">
-<tr></tr>
- <tr><th>Horario</th><th>Nombre del salon</th><th>Capacidad</th></tr>
- <?php foreach ($model as $room) { ?>
-   <tr>
-   <td><?php echo $room->id ?></td>
-   <td><?php echo $room->room ?></td>
-   <td><?php echo $room->capacity ?></td>
-   </tr>
- <?php } ?>
-</table>
-
-<h2>Listado de Salones</h2>
-<?php foreach ($clases as $classes) { ?>
-<table border="1">
-<tbody>
-	<tr><td colspan="7"><?php echo $classes->id_room ?></td></tr>
-	<tr><td>Horario</td><td>Lunes</td><td>Martes</td><td>Miércoles</td><td>Jueves</td><td>Viernes</td><td>Sábado</td></tr>
-</tbody>
-<br>
-<?php } ?>
-</table>
-
-
-<h2>Listado de Clases</h2>
-<table border="1">
-<tr><th>Nombre de Clase</th></tr>
-<?php foreach ($clases as $classes) { ?>
-<tr>
-<td><?php echo $classes->id_subject ?> <?php echo $classes->id_room ?></td>
-</tr>
-<?php } ?>
-</table>
 <center><h1>Horario Agosto - Diciembre 2016 - Vista de <?php echo $section;?></h1></center><br>
 <?php
 $classes_arr = array(
