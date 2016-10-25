@@ -6,48 +6,71 @@
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\helpers\BaseHtml;
+use yii\helpers\registerCss;
 
+
+// Este helper nos permite darle estilos a las tablas
+$this->registerCss("table {width: 80%; margin: 0 auto; } td.c{background-color:#1cd9e6;}  td{width: 13%; text-align: center;} td.rw{background-color:#b9c9fe;} .emptyRow{ background-color:#e8edff;}");
+
+// Solo se mostraran los horarios de los profesores que si tienen clases asignadas
 foreach ($model as $instructor) {
-		
+        $idmaterias = getIdClasses($instructor->id,$subjectstoinstructors);
+		$teacherClasses = getInstructorClasses($idmaterias,$clases);
+        if($teacherClasses){
 	    echo "<h4> Horario del profesor ".$instructor->name." ".$instructor->last_name."</h4> <br>";
-	    $idmaterias = getIdClasses($instructor->id,$subjectstoinstructors);
-	    $teacherClasses = getInstructorClasses($idmaterias,$clases);
 	    $horario=setSchedule($interval);
 	    setClassesIntoSchedule2($teacherClasses,$horario);
         echo "<br>";
         printMatrix($horario);
         echo "<br> <br>";
+        //printMat($horario);
         unset($materias);
-        unset($teacherClasses);
+        unset($teacherClasses);}
 		}
 
 //Función que imprime los horarios
 function printMatrix($matrix){
 	$f=sizeof($matrix);
 	$c=sizeof($matrix[0]);
-	echo '<table  border="1">';
+	echo '<table  border="1" width: 100% class="ScheduleTable">';
 for($i=0;$i<$f;$i++){
 	echo "<tr>";
 	for($j=0;$j<$c;$j++){
 		if($i==0 or $j==0){
-			echo "<td>";
+			echo '<td class="rw">';
 	        echo $matrix[$i][$j];
 		    echo "</td>";	}
 		    else{
             if($matrix[$i-1][$j]!=$matrix[$i][$j] and $matrix[$i][$j]!=" "){
             $size = getSubjectLength($matrix,$i,$j);
-            echo '<td rowspan="'.$size.'">';
+            echo '<td rowspan="'.$size.'" class="c">';
 	        echo $matrix[$i][$j];//$matrix[$i][$j];
 		    echo "</td>";
             }else{
             	if($matrix[$i][$j]==" "){
-            echo "<td>";
+            echo '<td class="emptyRow">';
 	        echo $matrix[$i][$j];
 		    echo "</td>";}            
             } }			
 	}
 	echo "</tr>";
 }
+echo "</table>";
+}
+
+// esta funcion imprime la tabla logica del horario
+function printMat($matrix){
+    $f=sizeof($matrix);
+    $c=sizeof($matrix[0]);
+    echo '<table  border="1">';
+    for($i=0;$i<$f;$i++){
+    echo "<tr>";
+    for($j=0;$j<$c;$j++){
+        echo "<td>";
+            echo $matrix[$i][$j];
+            echo "</td>";   
+    }
+echo "</tr>";}
 echo "</table>";
 }
 
@@ -129,8 +152,10 @@ $indice=count($teacherClasses);
 function getSubjectLength($matrix,$row,$column){
 $f=sizeof($matrix);
 $counter = 1;
+$stopCounting = false;
 	for($i=$row+1;$i<$f;$i++){
-		if($matrix[$i][$column]==$matrix[$row][$column])$counter++;
+        if($matrix[$i][$column]!=$matrix[$i-1][$column]) $stopCounting= true;
+		if($matrix[$i][$column]==$matrix[$row][$column] and $matrix[$i][$column]==$matrix[$i-1][$column] and !$stopCounting)$counter++;
 	}
 	return $counter;
 }
