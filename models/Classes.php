@@ -33,6 +33,8 @@ class Classes extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['time_start','time_end'], 'validateTime'],
+            ['id_subject','validateInstructor'],
             [['id_subject', 'id_room', 'day', 'time_start', 'time_end'], 'required'],
             [['id_subject', 'id_room', 'day'], 'integer'],
             [['time_start', 'time_end'], 'safe'],
@@ -71,4 +73,41 @@ class Classes extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Subject::className(), ['id' => 'id_subject']);
     }
+
+    public function validateTime()
+    {
+        $class_search = Classes::find()
+                    ->andFilterWhere(['day'=> $this->day])
+                    ->andFilterWhere(['id_room' => $this->id_room])
+                    ->andFilterWhere(['<', 'time_start', $this->time_end])
+                    ->andFilterWhere(['>', 'time_end', $this->time_start]);
+
+        if ($class_search->exists()) {
+            $this->addError('time_start', '');
+            $this->addError('time_end', 'Existe un choque que con la siguiente clase: '
+                .$class_search->one()->idSubject->name.', '
+                .$class_search->one()->idRoom->room.', '
+                .$class_search->one()->time_start.'-'.$class_search->one()->time_end
+                );
+        }
+    }    
+    public function validateInstructor()
+    {
+        $subjects_instructor = InstructorSubject::find()
+                ->where(['id_subject' => $this->id_subject])
+                ->all();
+        //     echo '<br/>';
+        //     echo '<br/>';
+
+        // print_r($subjects_instructor);
+        // if ($class_search->exists()) {
+        //     $this->addError('time_start', '');
+        //     $this->addError('time_end', 'Existe un choque que con la siguiente clase: '
+        //         .$class_search->one()->idSubject->name.', '
+        //         .$class_search->one()->idRoom->room.', '
+        //         .$class_search->one()->time_start.'-'.$class_search->one()->time_end
+        //         );
+        // }
+    }
+    
 }
