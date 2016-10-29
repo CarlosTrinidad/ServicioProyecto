@@ -9,6 +9,8 @@ use yii\widgets\DetailView;
 $this->title = $model->id;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Classes'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+$weekDays = array('1' => 'Lunes','2' => 'Martes', '3'=> 'Miércoles', '4' => 'Jueves', '5' => 'Viernes', '6' => 'Sábado', '0' => 'Domingo');
 ?>
 <div class="classes-view">
 
@@ -29,9 +31,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'id_subject',
-            'id_room',
-            'day',
+            'idSubject.name',
+            'idRoom.room',
+            [
+             'label' => 'Day',
+             'value' => $weekDays[$model->day]
+             ],
             'time_start',
             'time_end',
         ],
