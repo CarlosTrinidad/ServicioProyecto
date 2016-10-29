@@ -19,6 +19,8 @@ use Yii;
  */
 class Classes extends \yii\db\ActiveRecord
 {
+
+    public $weekDays = array('1' => 'Lunes','2' => 'Martes', '3'=> 'Miércoles', '4' => 'Jueves', '5' => 'Viernes', '6' => 'Sábado', '0' => 'Domingo');
     /**
      * @inheritdoc
      */
@@ -87,27 +89,43 @@ class Classes extends \yii\db\ActiveRecord
             $this->addError('time_end', 'Existe un choque que con la siguiente clase: '
                 .$class_search->one()->idSubject->name.', '
                 .$class_search->one()->idRoom->room.', '
+                .$this->weekDays[$class_search->one()->day].', '
                 .$class_search->one()->time_start.'-'.$class_search->one()->time_end
                 );
         }
     }    
     public function validateInstructor()
     {
-        $subjects_instructor = InstructorSubject::find()
+        // Materia -> Maestros -> Materias -> Clases -> choque con horario.
+        $instructors_subject = InstructorSubject::find()
                 ->where(['id_subject' => $this->id_subject])
                 ->all();
-        //     echo '<br/>';
-        //     echo '<br/>';
 
-        // print_r($subjects_instructor);
-        // if ($class_search->exists()) {
-        //     $this->addError('time_start', '');
-        //     $this->addError('time_end', 'Existe un choque que con la siguiente clase: '
-        //         .$class_search->one()->idSubject->name.', '
-        //         .$class_search->one()->idRoom->room.', '
-        //         .$class_search->one()->time_start.'-'.$class_search->one()->time_end
-        //         );
-        // }
+        // Obtener todas las materias del maestro
+        foreach ($instructors_subject as $profesor) {
+            $materias = InstructorSubject::find()
+                ->where(['id_instructor' => $profesor->id_instructor])
+                ->all();
+        // Buscar clase de cada materia
+            foreach ($materias as $class_subject) {
+                $class_search = Classes::find()
+                    ->andFilterWhere(['id_subject'=> $class_subject->id_subject])
+                    ->andFilterWhere(['<', 'time_start', $this->time_end])
+                    ->andFilterWhere(['>', 'time_end', $this->time_start]);
+
+                if ($class_search->exists()) {
+                    $this->addError('id_subject', 'Existe un choque que con la siguiente clase: '
+                        .$class_search->one()->idSubject->name.', '
+                        .$profesor->idInstructor->name.' '.$profesor->idInstructor->last_name.', '
+                        .$class_search->one()->idRoom->room.', '
+                        .$this->weekDays[$class_search->one()->day].', '
+                        .$class_search->one()->time_start.'-'.$class_search->one()->time_end
+                    );
+                }
+            }
+
+        }
+
     }
     
 }
