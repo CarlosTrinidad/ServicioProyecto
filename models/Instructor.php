@@ -43,4 +43,19 @@ class Instructor extends \yii\db\ActiveRecord
             'last_name' => Yii::t('app', 'Last Name'),
         ];
     }
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getInstructorSubjects()
+    {
+        return $this->hasMany(InstructorSubject::className(), ['id_instructor' => 'id']);
+    }
+    
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSubjects()
+    {
+        return $this->hasMany(Subject::className(), ['id' => 'id_subject'])->via('instructorSubjects');
+    }
 }
