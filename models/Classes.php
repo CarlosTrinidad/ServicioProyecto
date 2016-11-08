@@ -52,8 +52,8 @@ class Classes extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'id_subject' => Yii::t('app', 'Id Subject'),
-            'id_room' => Yii::t('app', 'Id Room'),
+            'id_subject' => Yii::t('app', 'Subject'),
+            'id_room' => Yii::t('app', 'Room'),
             'day' => Yii::t('app', 'Day'),
             'time_start' => Yii::t('app', 'Time Start'),
             'time_end' => Yii::t('app', 'Time End'),
