@@ -29,7 +29,6 @@ class InstructorscheduleController extends Controller
 		public function actionInstructor($id){
 	$instructor = Instructor::findOne($id);
 	$interval = Schedule::find()->all();
-
-      return $this->render("teacherSchedule",["instructor"=>$instructor,"interval"=>$interval]);
+    return $this->render("teacherSchedule",["instructor"=>$instructor,"interval"=>$interval]);
 	}
 }
