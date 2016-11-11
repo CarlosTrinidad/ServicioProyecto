@@ -27,18 +27,18 @@ use app\models\Schedule;
             ['prompt'=>'Select schoolroom']
             ) ?>
 
-<!--     <?= $form->field($model, 'day')->dropDownList(['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],[1,2,3,4,5,6,0]) ?>
- -->
-
      <?= $form->field($model, 'day')->dropDownList(['1' => 'Lunes','2' => 'Martes', '3'=> 'Miércoles', '4' => 'Jueves', '5' => 'Viernes', '6' => 'Sábado', '0' => 'Domingo']) ?>
 
     <?= $form->field($model, 'time_start')->dropDownList(
-        ArrayHelper::map(Schedule::find()->all(),'id','schedule'),['prompt'=>'Hora de Inicio']
+        ArrayHelper::map(Schedule::find()->all(),'schedule','schedule'),['prompt'=>'Hora de Inicio']
     ) ?>
 
     <?= $form->field($model, 'time_end')->dropDownList(
-        ArrayHelper::map(Schedule::find()->all(),'id','schedule'),['prompt'=>'Hora de Finalización']
+        ArrayHelper::map(Schedule::find()->all(),'schedule','schedule'),['prompt'=>'Hora de Finalización']
     ) ?>
+
+    <?= $form->errorSummary($model, ['showAllErrors' => true]); ?>
+
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

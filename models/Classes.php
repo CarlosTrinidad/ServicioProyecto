@@ -21,6 +21,7 @@ class Classes extends \yii\db\ActiveRecord
 {
 
     public $weekDays = array('1' => 'Lunes','2' => 'Martes', '3'=> 'Miércoles', '4' => 'Jueves', '5' => 'Viernes', '6' => 'Sábado', '0' => 'Domingo');
+    public $listErrors;
     /**
      * @inheritdoc
      */
@@ -85,13 +86,16 @@ class Classes extends \yii\db\ActiveRecord
                     ->andFilterWhere(['>', 'time_end', $this->time_start]);
 
         if ($class_search->exists()) {
-            $this->addError('time_start', '');
-            $this->addError('time_end', 'Existe un choque que con la siguiente clase: '
-                .$class_search->one()->idSubject->name.', '
-                .$class_search->one()->idRoom->room.', '
-                .$this->weekDays[$class_search->one()->day].', '
-                .$class_search->one()->time_start.'-'.$class_search->one()->time_end
-                );
+            foreach ($class_search->all() as $class_single) {
+                $this->addError('listErrors', 'Error con el horario: '
+                    .$class_single->idSubject->name.', '
+                    .$class_single->idRoom->room.', '
+                    .$this->weekDays[$class_single->day].', '
+                    .$class_single->time_start.'-'.$class_single->time_end
+                    );
+            }
+            $this->addError('time_start');
+            $this->addError('time_end');
         }
     }    
     public function validateInstructor()
@@ -114,13 +118,25 @@ class Classes extends \yii\db\ActiveRecord
                     ->andFilterWhere(['>', 'time_end', $this->time_start]);
 
                 if ($class_search->exists()) {
-                    $this->addError('id_subject', 'Existe un choque que con la siguiente clase: '
-                        .$class_search->one()->idSubject->name.', '
-                        .$profesor->idInstructor->name.' '.$profesor->idInstructor->last_name.', '
-                        .$class_search->one()->idRoom->room.', '
-                        .$this->weekDays[$class_search->one()->day].', '
-                        .$class_search->one()->time_start.'-'.$class_search->one()->time_end
-                    );
+                    //Agregar cada uno de los errores
+                    foreach ($class_search->all() as $class_single) {
+                        $this->addError('listErrors', 'Error con profesor: '
+                            .$class_single->idSubject->name.', '
+                            .$profesor->idInstructor->name.' '.$profesor->idInstructor->last_name.', '
+                            .$class_single->idRoom->room.', '
+                            .$this->weekDays[$class_single->day].', '
+                            .$class_single->time_start.'-'.$class_single->time_end
+                            );
+                    }
+                    $this->addError('id_subject');
+
+                    // $this->addError('id_subject', 'Existe un choque que con la siguiente clase: '
+                    //     .$class_search->one()->idSubject->name.', '
+                    //     .$profesor->idInstructor->name.' '.$profesor->idInstructor->last_name.', '
+                    //     .$class_search->one()->idRoom->room.', '
+                    //     .$this->weekDays[$class_search->one()->day].', '
+                    //     .$class_search->one()->time_start.'-'.$class_search->one()->time_end
+                    // );
                 }
             }
 
