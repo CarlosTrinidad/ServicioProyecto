@@ -94,8 +94,6 @@ class Classes extends \yii\db\ActiveRecord
                     .$class_single->time_start.'-'.$class_single->time_end
                     );
             }
-            $this->addError('time_start');
-            $this->addError('time_end');
         }
     }    
     public function validateInstructor()
@@ -115,7 +113,9 @@ class Classes extends \yii\db\ActiveRecord
                 $class_search = Classes::find()
                     ->andFilterWhere(['id_subject'=> $class_subject->id_subject])
                     ->andFilterWhere(['<', 'time_start', $this->time_end])
-                    ->andFilterWhere(['>', 'time_end', $this->time_start]);
+                    ->andFilterWhere(['>', 'time_end', $this->time_start])
+                    ->andFilterWhere(['day'=> $this->day]);
+
 
                 if ($class_search->exists()) {
                     //Agregar cada uno de los errores
@@ -128,15 +128,7 @@ class Classes extends \yii\db\ActiveRecord
                             .$class_single->time_start.'-'.$class_single->time_end
                             );
                     }
-                    $this->addError('id_subject');
 
-                    // $this->addError('id_subject', 'Existe un choque que con la siguiente clase: '
-                    //     .$class_search->one()->idSubject->name.', '
-                    //     .$profesor->idInstructor->name.' '.$profesor->idInstructor->last_name.', '
-                    //     .$class_search->one()->idRoom->room.', '
-                    //     .$this->weekDays[$class_search->one()->day].', '
-                    //     .$class_search->one()->time_start.'-'.$class_search->one()->time_end
-                    // );
                 }
             }
 

@@ -3,6 +3,7 @@ namespace app\controllers;
 use app\models\Instructor;
 use app\models\Subject;
 use app\models\Classes;
+use app\models\Schedule;
 use yii\web\Controller;
 
 class InstructorscheduleController extends Controller
