@@ -13,37 +13,164 @@ class m161115_154515_create_insert_data_semester_schedule_table extends Migratio
     public function up()
     {
       $this->execute("INSERT INTO `study_program` (`id`, `name`) VALUES
-        /*Ejemplo:
-        (1, 'A'),
-        (2, 'IC'),
-        (3, 'CC');
-        */
-        /*Torres pega tu codigo aqui de los datos de la tabla study_program*/
-
-
-      ");
+		(1, 'A'),
+		(2, 'IC'),
+		(3, 'CC'),
+		(4, 'IS'),
+		(5, 'E'),
+		(6, 'M'),
+		(7, 'MCC'),
+		(8, 'MCM'),
+		(9, 'EE');");
 
       $this->execute("INSERT INTO `semester` (`id`, `name`, `study_program_id`) VALUES
-        /*Ejemplo:
-        (1, 'A1 MEFI', 1),
-        (2, 'A2 MEFI', 1),
-        (3, 'A3 MEFI', 1);
-        */
-        /*Torres pega tu codigo aqui de los datos de la tabla semester*/
-
-
-      ");
+		(1, 'A1 MEFI', 1),
+		(2, 'A2 MEFI', 1),
+		(3, 'A3 MEFI', 1),
+		(5, 'A4 MEFI', 1),
+		(6, 'A5 MEFI', 1),
+		(7, 'A6 MEFI', 1),
+		(8, 'A7 MEFI', 1),
+		(9, 'A8 MEFI', 1),
+		(12, 'IC1 MEFI', 2),
+		(13, 'IC2 MEFI', 2),
+		(14, 'IC3 MEFI', 2),
+		(15, 'IC4 MEFI', 2),
+		(16, 'IC5 MEFI', 2),
+		(17, 'IC6 MEFI', 2),
+		(18, 'IC7 MEFI', 2),
+		(19, 'IC8 MEFI', 2),
+		(20, 'CC1 MEFI', 3),
+		(21, 'CC2 MEFI', 3),
+		(22, 'CC3 MEFI', 3),
+		(23, 'CC4 MEFI', 3),
+		(24, 'CC5 MEFI', 3),
+		(25, 'CC6 MEFI', 3),
+		(26, 'CC7 MEFI', 3),
+		(27, 'CC8 MEFI', 3),
+		(28, 'IS1 MEFI', 4),
+		(29, 'IS2 MEFI', 4),
+		(30, 'IS3 MEFI', 4),
+		(31, 'IS4 MEFI', 4),
+		(32, 'IS5 MEFI', 4),
+		(33, 'IS6 MEFI', 4),
+		(34, 'IS7 MEFI ', 4),
+		(35, 'IS8 MEFI', 4),
+		(36, 'E1 MEFI', 5),
+		(37, 'E2 MEFI', 5),
+		(38, 'E3 MEFI', 5),
+		(39, 'E4 MEFI', 5),
+		(40, 'E6 MEFI', 5),
+		(41, 'E7 MEFI', 5),
+		(42, 'E8 MEFI', 5),
+		(43, 'M1 MEFI', 6),
+		(44, 'M2 MEFI', 6),
+		(45, 'M3 MEFI', 6),
+		(46, 'M4 MEFI', 6),
+		(47, 'M5 MEFI', 6),
+		(48, 'M6 MEFI', 6),
+		(49, 'M7 MEFI ', 6),
+		(50, 'M8 MEFI', 6),
+		(51, 'MCC1 MEFI', 7),
+		(52, 'MCC2 MEFI ', 7),
+		(53, 'MCC3 MEFI ', 7),
+		(54, 'MCC4 MEFI ', 7),
+		(55, 'MCC2 MEyA', 7),
+		(56, 'MCC1 MEyA', 7),
+		(57, 'MCC3 MEyA ', 7),
+		(58, 'MCC4 MEyA ', 7),
+		(59, 'MCM1 MEFI', 8),
+		(60, 'MCM2 MEFI', 8),
+		(61, 'MCM3 MEFI', 8),
+		(62, 'MCM4 MEFI', 8),
+		(63, 'EE1 MEyA', 9),
+		(64, 'EE2 MEyA', 9),
+		(65, 'EE3 MEyA', 9),
+		(66, 'EE4 MEyA', 9),
+		(67, 'A9 MEFI', 1),
+		(68, 'IC9 MEFI', 2),
+		(69, 'CC9 MEFI', 3),
+		(70, 'IS9 MEFI', 4),
+		(71, 'E9 MEFI', 5),
+		(72, 'M9 MEFI', 6),
+		(73, 'IS1 MEyA', 4),
+		(74, 'IS2 MEyA', 4),
+		(75, 'IS3 MEyA', 4),
+		(76, 'IS4 MEyA', 4),
+		(77, 'IS5 MEyA', 4),
+		(78, 'IS6 MEyA', 4),
+		(79, 'IS7 MEyA', 4),
+		(80, 'IS8 MEyA', 4),
+		(81, 'IS9 MEyA', 4),
+		(82, 'CC1 MEyA', 3),
+		(83, 'CC2 MEyA', 3),
+		(84, 'CC4 MEyA', 3),
+		(85, 'CC5 MEyA', 3),
+		(86, 'CC6 MEyA', 3),
+		(87, 'CC7 MEyA', 3),
+		(88, 'CC8 MEyA', 3),
+		(89, 'CC9 MEyA', 3);");
 
       $this->execute("INSERT INTO `schedule` (`id`, `schedule`) VALUES
-          /*Ejemplo:
-          ('1', '07:00:00'),
-          ('2', '07:30:00'),
-          ('3', '08:00:00');
-          */
-            /*Torres pega tu codigo aqui de los datos de la tabla schedule*/
-
-
-      ");
+		(1, '07:00:00'),
+		(2, '07:30:00'),
+		(3, '08:00:00'),
+		(4, '08:30:00'),
+		(5, '09:00:00'),
+		(6, '09:30:00'),
+		(7, '10:00:00'),
+		(8, '10:30:00'),
+		(9, '11:00:00'),
+		(10, '11:30:00'),
+		(11, '12:00:00'),
+		(12, '12:30:00'),
+		(13, '13:00:00'),
+		(14, '13:30:00'),
+		(15, '14:00:00'),
+		(16, '14:30:00'),
+		(17, '15:00:00'),
+		(18, '15:30:00'),
+		(19, '16:00:00'),
+		(20, '16:30:00'),
+		(21, '17:00:00'),
+		(22, '17:30:00'),
+		(23, '18:00:00'),
+		(24, '18:30:00'),
+		(25, '19:00:00'),
+		(26, '19:30:00'),
+		(27, '20:00:00'),
+		(28, '20:30:00'),
+		(29, '21:00:00');");
+		
+		$this->execute("INSERT INTO `room` (`id`, `room`, `capacity`) VALUES
+			(1, 'CC1', 36),
+			(2, 'CC2', 18),
+			(3, 'CC3', 36),
+			(4, 'CC4', 24),
+			(5, 'CC5', 24),
+			(6, 'CC7', 18),
+			(7, 'CC8', 36),
+			(8, 'C1', 35),
+			(9, 'C10', 45),
+			(10, 'C2', 20),
+			(11, 'C4', 40),
+			(12, 'C6', 40),
+			(13, 'C7', 40),
+			(14, 'C8', 40),
+			(15, 'C9', 40),
+			(16, 'D1', 40),
+			(17, 'D2', 40),
+			(18, 'D3', 40),
+			(19, 'D4', 40),
+			(20, 'F2', 40),
+			(21, 'H1', 40),
+			(22, 'H2', 40),
+			(23, 'H3', 40),
+			(24, 'H4', 40),
+			(25, 'H5', 60),
+			(26, 'H7', 35),
+			(27, 'H8', 35),
+			(28, 'F3', 40);");
 
     }
 
