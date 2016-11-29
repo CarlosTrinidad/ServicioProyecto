@@ -129,7 +129,7 @@ class SemesterController extends Controller
 
      /**
      * Import the Semester data based on import.xlsx.
-     */   
+     */
     public function actionImportExcel(){
         ini_set('memory_limit', '-1');
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
@@ -149,9 +149,9 @@ class SemesterController extends Controller
             // var_dump($objPHPExcel);
             $sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
             $highestRow = $objPHPExcel->getSheet(0)->getHighestRow();
-            
+
             $newTotal = 0;
-            for ($row=2; $row <= $highestRow ; $row++) { 
+            for ($row=2; $row <= $highestRow ; $row++) {
                 // Se verifica si existe el instructor
                 $newInstructor = new Instructor();
                 $newInstructor = Instructor::find()
@@ -172,14 +172,14 @@ class SemesterController extends Controller
             echo '  se agregaron: ';
             print_r($newTotal);
             echo '<br/>';
-            
+
             //covertir MEFI en 1
             $modelos = array('1' => 'MEFI','2' => 'MEyA', '3'=> 'MEFI-MEyA');
             $programasEduc = StudyProgram::find()
                     ->asArray()
                     ->all();
 
-            for ($i=0; $i <=4 ; $i++) { 
+            for ($i=0; $i <=4 ; $i++) {
                 if ($i == 3 or $i == 2) {
                     continue;
                 }
@@ -195,7 +195,7 @@ class SemesterController extends Controller
 
                 $newTotal = 0;
 
-                for ($row=2; $row <= $highestRow ; $row++) { 
+                for ($row=2; $row <= $highestRow ; $row++) {
                     // $newSubject = new Subject();
                     // $newSubject = Subject::find()
                     //     ->andFilterWhere(['name' => $sheetData[$row]['B']])
@@ -269,14 +269,14 @@ class SemesterController extends Controller
                             }
                         }
                     }
-                    
+
 
                     // Identificar si las materia es impartida por multiples profesores
                     $apellidos = array();
                     $numProfesores = substr_count($sheetData[$row]['G'], '/');
                     if ($numProfesores > 0) {
                         $posInicio = 0;
-                        for ($m=0; $m <= $numProfesores ; $m++) { 
+                        for ($m=0; $m <= $numProfesores ; $m++) {
                             $posFinal = strpos($sheetData[$row]['G'], '/', $posInicio);
                                 if($posFinal == false){
                                     $posFinal = strlen($sheetData[$row]['G']);
@@ -308,7 +308,7 @@ class SemesterController extends Controller
                     // }
 
                     // Search Instructor en BD y obtener su id
-                    for ($j=0; $j < count($apellidos); $j++) { 
+                    for ($j=0; $j < count($apellidos); $j++) {
                         $instr = new Instructor();
                         $instr = Instructor::find()
                             ->andFilterWhere(['like' ,'last_name',trim($apellidos[$j])])
@@ -349,10 +349,10 @@ class SemesterController extends Controller
         }
 
     }
-    
+
     public function actionExportExcel(){
                 /** Include PHPExcel */
- 
+
         // Here is the sample array of data
         $hearderAsignaturas = array(
             'Id',
@@ -370,10 +370,10 @@ class SemesterController extends Controller
             'Jueves',
             'Viernes',
             'Sábado');
- 
+
         // Create new PHPExcel object
         $objPHPExcel = new \PHPExcel();
-        
+
         // Fill worksheet from values in array
         $objPHPExcel->getActiveSheet()->fromArray($hearderAsignaturas, null, 'A1');
         $sheet = $objPHPExcel->getActiveSheet();
@@ -390,8 +390,8 @@ class SemesterController extends Controller
         // Set AutoSize for asignaturas and email modalidad
         $sheet->getColumnDimension('B')->setAutoSize(true);
         $sheet->getColumnDimension('C')->setAutoSize(true);
-        
-        
+
+
         $asignatura = new Subject();
         $asignatura = Subject::find()->all();
         $sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
@@ -401,13 +401,20 @@ class SemesterController extends Controller
             print_r($highestRow);
             $sheetData[1]['C'] = $key->name;
 
-            // for ($row=2; $row <= $highestRow ; $row++) { 
+            // for ($row=2; $row <= $highestRow ; $row++) {
             //         $sheetData[$row]['C'] = $key->name;
             // }
         }
-        // Save Excel 2007 file
+        
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="MyExcel.xlsx"');
+        header('Cache-Control: max-age=0');
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        $objWriter->save('MyExcel.xlsx');
+        // Forzar descarga
+        $objWriter->save('php://output');
+        // Save Excel 2007 file
+        /*$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save('MyExcel.xlsx');*/
     }
 
 }
