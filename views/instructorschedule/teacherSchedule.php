@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\registerCss;
+use yii\helpers\Html;
 
 //Se aplican estilos al horario
 $this->registerCss("table {width: 80%; margin: 0 auto; border:#000000;} td.c{background-color:#FACC2E; color:#0B0B61; font-weight: bold;}  td{width: 13%; text-align: center;} td.rw{background-color:#0B0B61;color:#FACC2E} .emptyRow{ background-color:#FFFFFF;}");
@@ -13,7 +14,7 @@ $horario=setSchedule($interval);
 // Se obtienen las clases y se despliegan
 echo "<br>";
 	foreach($instructor->subjects as $subject)
-		{   
+		{
            // print_r($subject->programSubjects);
 setClassesIntoSchedule2($subject->classes,$horario);
 		}
@@ -50,6 +51,8 @@ function printMatrix($matrix){
 	$f=sizeof($matrix);
 	$c=sizeof($matrix[0]);
 	echo '<table  border="1" width: 100% class="ScheduleTable">';
+	// Yii format
+	// echo '<table class="table table-striped table-bordered">';
 for($i=0;$i<$f;$i++){
 	echo "<tr>";
 	for($j=0;$j<$c;$j++){
@@ -67,8 +70,10 @@ for($i=0;$i<$f;$i++){
             	if($matrix[$i][$j]==" "){
             echo '<td class="emptyRow">';
 	        echo $matrix[$i][$j];
-		    echo "</td>";}            
-            } }			
+	        // echo $matrix[$i][0].":00";
+					echo Html::a('<span class="glyphicon glyphicon-plus"></span>', ['classes/create', 'day' => $j, 'time_start' => $matrix[$i][0].":00" ]);
+				echo "</td>";}
+            } }
 	}
 	echo "</tr>";
 }
@@ -78,7 +83,7 @@ echo "</table>";
 //Esta funcion llena el horario del maestro de acuerdo a los registros encontrados
 function setClassesIntoSchedule2($teacherClasses,&$schedule){
 if($teacherClasses){
-$programas = array();    
+$programas = array();
 $f=sizeof($schedule);
 $indice=count($teacherClasses);
 	    for($i=0;$i<$indice;$i++){
@@ -133,7 +138,7 @@ function printMat($matrix){
     for($j=0;$j<$c;$j++){
         echo "<td>";
             echo $matrix[$i][$j];
-            echo "</td>";   
+            echo "</td>";
     }
 echo "</tr>";}
 echo "</table>";

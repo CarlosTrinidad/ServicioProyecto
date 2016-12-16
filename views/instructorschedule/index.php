@@ -1,7 +1,7 @@
 
 <h1>Esta es la vista de <?php echo $section;?></h1><br>
 
-<?php 
+<?php
 
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
@@ -39,7 +39,7 @@ for($i=0;$i<$f;$i++){
 <<<<<<< HEAD
 		echo "<td>";
 	echo $matrix[$i][$j];
-		echo "</td>";	
+		echo "</td>";
 =======
 		if($i==0 or $j==0){
 			echo '<td class="rw">';
@@ -55,8 +55,8 @@ for($i=0;$i<$f;$i++){
             	if($matrix[$i][$j]==" "){
             echo '<td class="emptyRow">';
 	        echo $matrix[$i][$j];
-		    echo "</td>";}            
-            } }			
+		    echo "</td>";}
+            } }
 >>>>>>> b0a001c9faad4ab679a5fae2392168fc2fe9cc85
 	}
 	echo "</tr>";
@@ -241,7 +241,7 @@ function printMat($matrix){
     for($j=0;$j<$c;$j++){
         echo "<td>";
             echo $matrix[$i][$j];
-            echo "</td>";   
+            echo "</td>";
     }
 echo "</tr>";}
 echo "</table>";
@@ -306,7 +306,7 @@ $indice=count($teacherClasses);
 	    		if(isInRange($horas[$j],$teacherClasses[$i]->time_start,$teacherClasses[$i]->time_end)){
 	    	$schedule[$j+1][$teacherClasses[$i]->day]= " Materia: ".$teacherClasses[$i]->subject->name."<br>"."Salón: ".$teacherClasses[$i]->room->room;
 	           }
-	    	} }	
+	    	} }
 	    	   }}
 
 
@@ -359,5 +359,3 @@ $stopCounting = false;
 
 
 ?>
-
-

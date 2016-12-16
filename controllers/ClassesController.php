@@ -61,9 +61,14 @@ class ClassesController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($day = null, $time_start = null)
     {
         $model = new Classes();
+
+        if(!empty($time_start)) $model->time_start = $time_start;
+        if(!empty($day)) $model->day = $day;
+
+        //var_dump($instructor); var_dump($instructor); var_dump($instructor); var_dump($instructor); var_dump($model);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
