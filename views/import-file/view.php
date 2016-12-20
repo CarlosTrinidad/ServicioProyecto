@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
   <?php if (Yii::$app->session->hasFlash('errorProf')): ?>
     <div class="alert alert-danger alert-dismissable">
-      <?php echo "Se agregaron ";?>
+      <?php echo "Verifique los datos: ",'</br>';?>
 
     <?php
           foreach (Yii::$app->session->getFlash('errorProf') as $message) {
