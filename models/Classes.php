@@ -80,10 +80,14 @@ class Classes extends \yii\db\ActiveRecord
     public function validateTime()
     {
         $class_search = Classes::find()
-                    ->andFilterWhere(['day'=> $this->day])
+                    ->where(['<', 'time_start', $this->time_end])
+                    ->where(['>', 'time_start', $this->time_start])
+                    ->where(['<', 'time_end', $this->time_end])
+                    ->where(['>', 'time_end', $this->time_start])
+                    ->andFilterWhere(['!=', 'id', $this->id])
                     ->andFilterWhere(['id_room' => $this->id_room])
-                    ->andFilterWhere(['<', 'time_start', $this->time_end])
-                    ->andFilterWhere(['>', 'time_end', $this->time_start]);
+                    ->andFilterWhere(['day'=> $this->day]);
+
 
         if ($class_search->exists()) {
             foreach ($class_search->all() as $class_single) {
@@ -95,7 +99,7 @@ class Classes extends \yii\db\ActiveRecord
                     );
             }
         }
-    }    
+    }
     public function validateInstructor()
     {
         // Materia -> Maestros -> Materias -> Clases -> choque con horario.
@@ -111,9 +115,12 @@ class Classes extends \yii\db\ActiveRecord
         // Buscar clase de cada materia
             foreach ($materias as $class_subject) {
                 $class_search = Classes::find()
+                    ->where(['<', 'time_start', $this->time_end])
+                    ->where(['>', 'time_start', $this->time_start])
+                    ->where(['<', 'time_end', $this->time_end])
+                    ->where(['>', 'time_end', $this->time_start])
+                    ->andFilterWhere(['!=', 'id', $this->id])
                     ->andFilterWhere(['id_subject'=> $class_subject->id_subject])
-                    ->andFilterWhere(['<', 'time_start', $this->time_end])
-                    ->andFilterWhere(['>', 'time_end', $this->time_start])
                     ->andFilterWhere(['day'=> $this->day]);
 
 
@@ -135,5 +142,5 @@ class Classes extends \yii\db\ActiveRecord
         }
 
     }
-    
+
 }
