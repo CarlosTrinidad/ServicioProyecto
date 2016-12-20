@@ -61,17 +61,23 @@ class ClassesController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($day = null, $time_start = null)
-    {
-        $model = new Classes();
 
+    public function actionCreate($day = null, $time_start = null, $return = null)
+    {
+
+        // get a session variable. The following usages are equivalent:
+        $model = new Classes();
+        $ref = Yii::$app->request->referrer;
         if(!empty($time_start)) $model->time_start = $time_start;
         if(!empty($day)) $model->day = $day;
-
-        //var_dump($instructor); var_dump($instructor); var_dump($instructor); var_dump($instructor); var_dump($model);
+        if(!empty($return)) $model->day = $day;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+          if ($return == 'yes'){
+              return $this->redirect(\Yii::$app->session->get('returnUrl'));
+          }else{
             return $this->redirect(['view', 'id' => $model->id]);
+          }
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -85,12 +91,19 @@ class ClassesController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
+    public function actionUpdate($id, $return = null)
     {
         $model = $this->findModel($id);
+        // $this->findModel($id)->delete();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
+          if ($return == 'yes'){
+              return $this->redirect(\Yii::$app->session->get('returnUrl'));
+          }else{
             return $this->redirect(['view', 'id' => $model->id]);
+          }
+
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -104,11 +117,16 @@ class ClassesController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
+    public function actionDelete($id,  $return = null)
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        if ($return == 'yes'){
+            return $this->redirect(\Yii::$app->session->get('returnUrl'));
+        }else{
+          return $this->redirect(['index']);
+        }
+
     }
 
     /**

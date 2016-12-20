@@ -50,9 +50,9 @@ function setSchedule($intv){
 function printMatrix($matrix){
 	$f=sizeof($matrix);
 	$c=sizeof($matrix[0]);
-	echo '<table  border="1" width: 100% class="ScheduleTable">';
+	// echo '<table  border="1" width: 100% class="ScheduleTable">';
 	// Yii format
-	// echo '<table class="table table-striped table-bordered">';
+	echo '<table class="table table-striped table-bordered">';
 for($i=0;$i<$f;$i++){
 	echo "<tr>";
 	for($j=0;$j<$c;$j++){
@@ -64,14 +64,28 @@ for($i=0;$i<$f;$i++){
             if($matrix[$i-1][$j]!=$matrix[$i][$j] and $matrix[$i][$j]!=" "){
             $size = getSubjectLength($matrix,$i,$j);
             echo '<td rowspan="'.$size.'" class="c">';
-	        echo $matrix[$i][$j];//$matrix[$i][$j];
+
+					$beforeColon = substr($matrix[$i][$j], strpos($matrix[$i][$j],']')+1);
+					$id_class = substr($matrix[$i][$j], 0 , strpos($matrix[$i][$j],']'));
+					// echo $matrix[$i][$j];
+					echo $beforeColon;
+					// echo $id_class;
+
+					echo Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['classes/update', 'id' => $id_class, 'return' => 'yes' ]);
+					echo Html::a('<span class="glyphicon glyphicon-trash"></span>', ['classes/delete', 'id' => $id_class, 'return' => 'yes'], [
+					                'class' => '',
+					                'data' => [
+					                    'confirm' => 'Are you absolutely sure ? You will lose all the information about this user with this action.',
+					                    'method' => 'post',
+					                ],
+					            ]);
 		    echo "</td>";
             }else{
             	if($matrix[$i][$j]==" "){
             echo '<td class="emptyRow">';
 	        echo $matrix[$i][$j];
 	        // echo $matrix[$i][0].":00";
-					echo Html::a('<span class="glyphicon glyphicon-plus"></span>', ['classes/create', 'day' => $j, 'time_start' => $matrix[$i][0].":00" ]);
+					echo Html::a('<span class="glyphicon glyphicon-plus"></span>', ['classes/create', 'day' => $j, 'time_start' => $matrix[$i][0].":00", 'return' => 'yes' ]);
 				echo "</td>";}
             } }
 	}
@@ -105,11 +119,11 @@ $indice=count($teacherClasses);
             		if($schedule[$j][0]==substr($teacherClasses[$i]->time_end,0,5) and $ini){
             			$ini=false;
             			$fin= true;
-            			$schedule[$j][$teacherClasses[$i]->day]= " Materia: ".$teacherClasses[$i]->idSubject->name."<br>"."Salón: ".$teacherClasses[$i]->idRoom->room."<br>".$prog;
+            			$schedule[$j][$teacherClasses[$i]->day]= $teacherClasses[$i]->id."]"." Materia: ".$teacherClasses[$i]->idSubject->name."<br>"."Salón: ".$teacherClasses[$i]->idRoom->room."<br>".$prog;
             		}
             	}
             }
-            if(!$fin and $ini) $schedule[$j][$teacherClasses[$i]->day]= " Materia: ".$teacherClasses[$i]->idSubject->name."<br>"."Salón: ".$teacherClasses[$i]->idRoom->room."<br>".$prog;
+            if(!$fin and $ini) $schedule[$j][$teacherClasses[$i]->day]= $teacherClasses[$i]->id."]"." Materia: ".$teacherClasses[$i]->idSubject->name."<br>"."Salón: ".$teacherClasses[$i]->idRoom->room."<br>".$prog;
 	    	}
 	    unset($programas);
         $programas = array();
