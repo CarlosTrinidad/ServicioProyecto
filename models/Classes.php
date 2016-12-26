@@ -37,6 +37,7 @@ class Classes extends \yii\db\ActiveRecord
     {
         return [
             [['time_start','time_end'], 'validateTime'],
+            [['time_end'], 'greaterTime'],
             ['id_subject','validateInstructor'],
             [['id_subject', 'id_room', 'day', 'time_start', 'time_end'], 'required'],
             [['id_subject', 'id_room', 'day'], 'integer'],
@@ -80,14 +81,32 @@ class Classes extends \yii\db\ActiveRecord
     public function validateTime()
     {
         $class_search = Classes::find()
-                    ->where(['<', 'time_start', $this->time_end])
-                    ->where(['>', 'time_start', $this->time_start])
-                    ->where(['<', 'time_end', $this->time_end])
-                    ->where(['>', 'time_end', $this->time_start])
+                    // ->orFilterWhere(['between', 'time_start',$this->time_start, $this->time_end])
+                    // ->orFilterWhere(['between', 'time_end',$this->time_start, $this->time_end])
+
+                    ->orFilterWhere([
+                        'and',
+                        ['>', 'time_start', $this->time_start],
+                        ['<', 'time_start', $this->time_end],
+                    ])
+                    ->orFilterWhere([
+                        'and',
+                        ['>', 'time_end', $this->time_start],
+                        ['<', 'time_end', $this->time_end],
+                    ])
+                    ->orFilterWhere([
+                        'and',
+                        ['<=', 'time_start', $this->time_start],
+                        ['>=', 'time_end', $this->time_end],
+                    ])
+                    // ->orFilterWhere([
+                    //     'and',
+                    //     ['=', 'time_start', $this->time_start],
+                    //     ['=', 'time_end', $this->time_end],
+                    // ])
                     ->andFilterWhere(['!=', 'id', $this->id])
                     ->andFilterWhere(['id_room' => $this->id_room])
                     ->andFilterWhere(['day'=> $this->day]);
-
 
         if ($class_search->exists()) {
             foreach ($class_search->all() as $class_single) {
@@ -103,26 +122,45 @@ class Classes extends \yii\db\ActiveRecord
     public function validateInstructor()
     {
         // Materia -> Maestros -> Materias -> Clases -> choque con horario.
-        $instructors_subject = InstructorSubject::find()
-                ->where(['id_subject' => $this->id_subject])
-                ->all();
-
-        // Obtener todas las materias del maestro
+        // $instructors_subject = InstructorSubject::find()
+        //         ->where(['id_subject' => $this->id_subject])
+        //         ->all();
+        //Buscar profesores de esta materia
+        $instructors_subject = InstructorSubject::findAll(['id_subject' => $this->id_subject]);
+        // Obtener todas las materias de cada maestro
         foreach ($instructors_subject as $profesor) {
-            $materias = InstructorSubject::find()
-                ->where(['id_instructor' => $profesor->id_instructor])
-                ->all();
+            // $materias = InstructorSubject::find()
+            //     ->where(['id_instructor' => $profesor->id_instructor])
+            //     ->all();
+            $materias = InstructorSubject::findAll(['id_instructor' => $profesor->id_instructor]);
         // Buscar clase de cada materia
             foreach ($materias as $class_subject) {
                 $class_search = Classes::find()
-                    ->where(['<', 'time_start', $this->time_end])
-                    ->where(['>', 'time_start', $this->time_start])
-                    ->where(['<', 'time_end', $this->time_end])
-                    ->where(['>', 'time_end', $this->time_start])
+                    // ->orFilterWhere(['between', 'time_start',$this->time_start, $this->time_end])
+                    // ->orFilterWhere(['between', 'time_end',$this->time_start, $this->time_end])
+                    ->orFilterWhere([
+                        'and',
+                        ['>', 'time_start', $this->time_start],
+                        ['<', 'time_start', $this->time_end],
+                    ])
+                    ->orFilterWhere([
+                        'and',
+                        ['>', 'time_end', $this->time_start],
+                        ['<', 'time_end', $this->time_end],
+                    ])
+                    ->orFilterWhere([
+                        'and',
+                        ['<=', 'time_start', $this->time_start],
+                        ['>=', 'time_end', $this->time_end],
+                    ])
+                    // ->orFilterWhere([
+                    //     'and',
+                    //     ['=', 'time_start', $this->time_start],
+                    //     ['=', 'time_end', $this->time_end],
+                    // ])
                     ->andFilterWhere(['!=', 'id', $this->id])
                     ->andFilterWhere(['id_subject'=> $class_subject->id_subject])
                     ->andFilterWhere(['day'=> $this->day]);
-
 
                 if ($class_search->exists()) {
                     //Agregar cada uno de los errores
@@ -135,12 +173,17 @@ class Classes extends \yii\db\ActiveRecord
                             .$class_single->time_start.'-'.$class_single->time_end
                             );
                     }
-
                 }
             }
 
         }
-
+    }
+// Tiempo de inicio es menor que tiempo final
+    public function greaterTime()
+    {
+      if ($this->time_start >= $this->time_end) {
+        $this->addError('time_end', 'Seleccione un tiempo de mayor al de inicio');
+      }
     }
 
 }
