@@ -24,11 +24,8 @@ $days = array(1,2,3,4,5);
 //printMatrix($horario);
 
 // Pruebas
-$ini = createIni($interval);
 $ini2 = createIni($interval);
 //EtiquetaDias
-$dayDistribution = [];
-$dayDistribution[] = "";
 $dayDistribution2 = [];
 $dayDistribution2[] = "";
 
