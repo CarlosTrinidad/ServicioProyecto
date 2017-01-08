@@ -14,8 +14,6 @@ $days = array(1,2,3,4,5);
 
 
 
-
-
  if($semester){
         $subjects = $semester->subjects;
         foreach ($subjects as $subject) {
