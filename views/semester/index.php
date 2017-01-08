@@ -30,7 +30,13 @@ $this->params['breadcrumbs'][] = $this->title;
 				'value' => 'studyProgram.name',
 				'header' => 'Study Program',
 			],
-            ['class' => 'yii\grid\ActionColumn'],
+             ['class' => 'yii\grid\ActionColumn',
+             'template' =>'{view} {update} {delete} {schedule}',
+             'buttons' => [
+             'schedule' => function ($url, $model, $key) {
+                return Html::a('<span class="glyphicon glyphicon-calendar"></span>', ['semesterschedule/semester', 'id' => $model->id],[ 'title' => Yii::t('app', 'Schedule'),'aria-label'=>Yii::t('app', 'Schedule'),'data-pjax' => "0",]);
+            },],
+            ],
         ],
     ]); ?>
 </div>
