@@ -153,16 +153,25 @@ class ImportFileController extends \yii\web\Controller
 
                         }
 
-
-                    $programas_opt = array("A", "IC", "CC", "IS", "E","M");
+                    // Asignar SubjectSemester (CC1 MEFI)
+                    $programas_opt = array("A", "IC", "CC", "IS", "E","M","MCC","MCM","EE");
                     foreach($programas_opt as $result_programa) {
                       $pos = strpos($sheetData[$row]['D'], $result_programa);
                       if ($pos === 0) {
                         $newSubSemester = new SubjectSemester();
+                        $newProgramSubject = new ProgramSubject();
+
+                        $resultStudy = StudyProgram::find()
+                            ->andFilterWhere(['name' => $result_programa])
+                            ->one();
+                        $newProgramSubject->id_subject = $newSubject->id;
+                        $newProgramSubject->id_program =$resultStudy->id;
+                        $newProgramSubject->save();
+
                         $searchSemester = $result_programa.substr($sheetData[$row]['L'], 0, strspn($sheetData[$row]['L'], "0123456789"))." ".$modelos[$newSubject->model];
                         $newSemester = new Semester();
                         $newSemester = Semester::find()
-                            ->andFilterWhere(['like' ,'name', $searchSemester])
+                            ->andFilterWhere(['name' => $searchSemester])
                             ->one();
                         if ($newSemester) {
                           $newSubSemester->subject_id = $newSubject->id;
