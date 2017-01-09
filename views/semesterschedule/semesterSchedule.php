@@ -9,7 +9,7 @@ $this->registerCss("table {width: 100%; margin: 0 auto; border:#000000;} td.c{ba
 
 //Se despliega información del maestro
 echo "<br><br><br><h4> Horario del semestre ".$semester->name."</h4>";
-$horario=setSchedule($interval);
+//$horario=setSchedule($interval);
 
 //Variable para representar los dias
 $days = array(1,2,3,4,5);
@@ -18,9 +18,10 @@ $days = array(1,2,3,4,5);
 
  if($semester){
         $subjects = $semester->subjects;
-        foreach ($subjects as $subject) {
-        setClassesIntoSchedule2($subject->classes,$horario);
-    }}
+    //    foreach ($subjects as $subject) {
+  //      setClassesIntoSchedule2($subject->classes,$horario);
+//    }
+}
 //printMatrix($horario);
 
 // Pruebas
