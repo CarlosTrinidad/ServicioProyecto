@@ -30,6 +30,7 @@ printMatrix($horario);
 
 		// Esta función crea el horario formato base del horario
 function setSchedule($intv){
+    $index = 1;
 	$col = 6;
 	$schedules[0][0] = "";
 	$schedules[0][1] = "Lunes";
@@ -40,12 +41,15 @@ function setSchedule($intv){
     for($i=0;$i<$col;$i++){
     foreach ($intv as $interval) {
     	if($i==0){
-    		$schedules[$interval->id][$i] = substr($interval->schedule,0,5);// schedule tiene el formato time (7:00:00), con substr simplificamos este formato (7:00)
+    		$schedules[$index][$i] = substr($interval->schedule,0,5);// schedule tiene el formato time (7:00:00), con substr simplificamos este formato (7:00)
     	}else{
-    		$schedules[$interval->id][$i] = " ";
+    		$schedules[$index][$i] = " ";
     	}
+        $index++;
     }
-    }
+        $index = 1;
+    }   
+
     return $schedules;
 }
 
