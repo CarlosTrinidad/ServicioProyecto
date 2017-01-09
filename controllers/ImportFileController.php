@@ -82,8 +82,11 @@ class ImportFileController extends \yii\web\Controller
                     $newInstructor = new Instructor();
                     $newInstructor->name = $sheetData[$row]['C'];
                     $newInstructor->last_name = $sheetData[$row]['D'];
-                    $newInstructor->save();
-                    $newTotal++;
+
+                    if ($newInstructor->save()) {
+                      $newTotal++;
+                    }
+
                 }
             }
 

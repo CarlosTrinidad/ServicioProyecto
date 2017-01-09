@@ -2,6 +2,9 @@
 use yii\helpers\registerCss;
 use yii\helpers\Html;
 
+
+$this->title = Yii::t('app', 'Horario de Profesor');
+
 //Se aplican estilos al horario
 $this->registerCss("table {width: 80%; margin: 0 auto; border:#000000;} td.c{background-color:#FACC2E; color:#0B0B61; font-weight: bold;}  td{width: 13%; text-align: center;} td.rw{background-color:#0B0B61;color:#FACC2E} .emptyRow{ background-color:#FFFFFF;}");
 
