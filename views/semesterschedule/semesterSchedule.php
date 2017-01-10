@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\registerCss;
+use yii\helpers\Html;
 
 $this->title = Yii::t('app', "Horario por semestre");
 
@@ -446,10 +447,24 @@ for($i=0;$i<$f;$i++){
             $size = getSubjectLength($matrix,$i,$j);
             echo '<td rowspan="'.$size.'" class="c">';
             echo $matrix[$i][$j];//$matrix[$i][$j];
+
+          $beforeColon = substr($matrix[$i][$j], strpos($matrix[$i][$j],']')+1);
+          $id_class = substr($matrix[$i][$j], 0 , strpos($matrix[$i][$j],']'));
+            echo "</br>";
+            echo Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['classes/update', 'id' => $id_class, 'return' => 'yes' ]);
+            echo Html::a('<span class="glyphicon glyphicon-trash"></span>', ['classes/delete', 'id' => $id_class, 'return' => 'yes'], [
+                            'class' => '',
+                            'data' => [
+                                'confirm' => 'Are you absolutely sure ? You will lose all the information about this user with this action.',
+                                'method' => 'post',
+                            ],
+                        ]);
             echo "</td>";
             }else{
                 if($matrix[$i][$j]==" "){
             echo '<td class="emptyRow">';
+            echo Html::a('<span class="glyphicon glyphicon-plus"></span>', ['classes/create', 'day' => $j, 'time_start' => $matrix[$i][0].":00", 'return' => 'yes' ]);
+
             echo $matrix[$i][$j];
             echo "</td>";}
             } }
