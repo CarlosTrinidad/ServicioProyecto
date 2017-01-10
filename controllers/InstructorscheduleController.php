@@ -20,6 +20,8 @@ class InstructorscheduleController extends Controller
 	// 	return $this->render("index",["model"=>$model,'section'=>$section,"materias"=>$materias,"clases"=>$clases]);
 	// }
 	public function actionIndex(){
+		\Yii::$app->session->set('returnUrl', Url::to(['instructorschedule/index']));
+
 		$instructors = Instructor::find()->all();
 		$section = "profesores";
 		$interval = Schedule::find()->all();

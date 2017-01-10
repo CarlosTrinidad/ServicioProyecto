@@ -48,7 +48,7 @@ function setSchedule($intv){
         $index++;
     }
         $index = 1;
-    }   
+    }
 
     return $schedules;
 }
@@ -74,10 +74,7 @@ for($i=0;$i<$f;$i++){
 
 					$beforeColon = substr($matrix[$i][$j], strpos($matrix[$i][$j],']')+1);
 					$id_class = substr($matrix[$i][$j], 0 , strpos($matrix[$i][$j],']'));
-					// echo $matrix[$i][$j];
 					echo $beforeColon;
-					// echo $id_class;
-
 					echo Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['classes/update', 'id' => $id_class, 'return' => 'yes' ]);
 					echo Html::a('<span class="glyphicon glyphicon-trash"></span>', ['classes/delete', 'id' => $id_class, 'return' => 'yes'], [
 					                'class' => '',
