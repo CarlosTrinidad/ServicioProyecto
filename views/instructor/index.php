@@ -17,6 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a(Yii::t('app', 'Create Instructor'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Show Instructors Schedule'), ['instructorschedule/index'], ['class' => 'btn btn-primary']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -28,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'last_name',
 
-            
+
             ['class' => 'yii\grid\ActionColumn',
              'template' =>'{view} {update} {delete} {schedule}',
              'buttons' => [
