@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
              'schedule' => function ($url, $model, $key) {
                 return Html::a('<span class="glyphicon glyphicon-calendar"></span>', ['subjectschedule/subject', 'id' => $model->id],[ 'title' => Yii::t('app', 'Schedule'),'aria-label'=>Yii::t('app', 'Schedule'),'data-pjax' => "0",]);
              },],
-             ],        ],
+             ],],
 
     ]); ?>
 </div>
