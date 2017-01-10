@@ -1,4 +1,3 @@
-
 <br><h3>Horario de los <?php echo $section;?></h3><br>
 
 <?php 
@@ -135,6 +134,5 @@ $stopCounting = false;
 
 
 ?>
-
 
 
