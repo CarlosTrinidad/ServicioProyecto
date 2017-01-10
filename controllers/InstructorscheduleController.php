@@ -3,7 +3,9 @@ namespace app\controllers;
 use app\models\Instructor;
 use app\models\Subject;
 use app\models\Classes;
+use app\models\Schedule;
 use yii\web\Controller;
+use yii\helpers\Url;
 
 class InstructorscheduleController extends Controller
 {
@@ -19,8 +21,9 @@ class InstructorscheduleController extends Controller
 
 
 	}
-	
+
 		public function actionInstructor($id){
+			\Yii::$app->session->set('returnUrl', Url::to(['instructorschedule/instructor', 'id'=>$id]));
 	$instructor = Instructor::findOne($id);
 	$interval = Schedule::find()->all();
     return $this->render("teacherSchedule",["instructor"=>$instructor,"interval"=>$interval]);

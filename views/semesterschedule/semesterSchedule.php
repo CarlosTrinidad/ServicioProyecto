@@ -1,5 +1,8 @@
 <?php
 use yii\helpers\registerCss;
+use yii\helpers\Html;
+
+$this->title = Yii::t('app', "Horario por semestre");
 
 //Se aplican estilos al horario
 $this->registerCss("table {width: 100%; margin: 0 auto; border:#000000;} td.c{background-color:#FACC2E; color:#0B0B61; font-weight: bold;}  td{width: 13%; text-align: center;} td.rw{background-color:#0B0B61;color:#FACC2E} .emptyRow{ background-color:#FFFFFF;}");
@@ -33,7 +36,7 @@ $dayDistribution2[] = "";
 foreach ($days as $day) {
  $cols = numCol($day,$subjects,$interval);
  $sub = groupByDay($day,$subjects);
- $section = createSection($cols,count($interval),$sub,$interval); 
+ $section = createSection($cols,count($interval),$sub,$interval);
  $test = cutSchedule($section);
  $ini2 = mergeSections($ini2,$test);
  $dayDistribution2[] = sizeof($test[0]);
@@ -143,7 +146,7 @@ function setSchedule($intv){
 //Esta funcion llena el horario del maestro de acuerdo a los registros encontrados
 function setClassesIntoSchedule2($teacherClasses,&$schedule){
 if($teacherClasses){
-$programas = array();    
+$programas = array();
 $f=sizeof($schedule);
 $indice=count($teacherClasses);
 	    for($i=0;$i<$indice;$i++){
@@ -209,8 +212,8 @@ for($i=0;$i<$f;$i++){
             	if($matrix[$i][$j]==" "){
             echo '<td class="emptyRow">';
 	        echo $matrix[$i][$j];
-		    echo "</td>";}            
-            } }			
+		    echo "</td>";}
+            } }
 	}
 	echo "</tr>";
 }
@@ -219,7 +222,7 @@ echo "</table>";
 
 //funcion agrupa classes por dia
 function groupByDay($dayId,$subjects){
-    $classes = array();  
+    $classes = array();
  foreach ($subjects as $subject) {
     foreach ($subject->classes as $class) {
         # code...
@@ -248,7 +251,7 @@ for($j=0;$j<$size;$j++){
    // echo $hours[$j]."<br>";
     if($class1->time_start == $hours[$j])$start = 1;
     if($class1->time_end == $hours[$j]){
-       $stop = 1; 
+       $stop = 1;
        array_push($c1,$j+1);
     }
     if($start && !$stop) array_push($c1,$j+1);
@@ -260,7 +263,7 @@ for($j=0;$j<$size;$j++){
    // echo $hours[$j]."<br>";
     if($class2->time_start == $hours[$j])$start = 1;
     if($class2->time_end == $hours[$j]){
-       $stop = 1; 
+       $stop = 1;
        array_push($c2,$j+1);
     }
     if($start && !$stop) array_push($c2,$j+1);
@@ -293,7 +296,7 @@ for($i=0;$i<$f;$i++){
     echo "<tr>";
     for($j=0;$j<$c;$j++){
         echo "<td>";
-        echo $matrix[$i][$j];   
+        echo $matrix[$i][$j];
         echo "</td>"; }
         echo "</tr>";
 }
@@ -328,8 +331,8 @@ foreach ($interval as $hour) {
     # code...
     $hours[] = $hour->schedule;
 }
-$iniTime = array_search($startTime, $hours); 
-$endTime = array_search($endTime, $hours); 
+$iniTime = array_search($startTime, $hours);
+$endTime = array_search($endTime, $hours);
 for($i = $iniTime;$i<=$endTime;$i++){
 if($section[$i][$col]!=" ")$available=false;
 }
@@ -348,8 +351,8 @@ foreach ($interval as $hour) {
             }
             $prog = implode(",", $programas);
 
-$iniTime = array_search($startTime, $hours); 
-$endTime = array_search($endTime, $hours); 
+$iniTime = array_search($startTime, $hours);
+$endTime = array_search($endTime, $hours);
 for($i = $iniTime;$i<=$endTime;$i++){
 $section[$i][$col]="Materia: ".$class->idSubject->name."<br>"."Salón: ".$class->idRoom->room."<br>".$prog;
 }
@@ -362,9 +365,9 @@ $f=sizeof($schedule);
 $c=sizeof($schedule[0]);
 for($k=0;$k<$c;$k++){$finalSch[0][$k]="";}
 // Merge matriz and labels
-    for ($i=0; $i < $f ; $i++) { 
+    for ($i=0; $i < $f ; $i++) {
         # code...
-        for ($j=0; $j <$c ; $j++) { 
+        for ($j=0; $j <$c ; $j++) {
             # code...
             $finalSch[$i+1][$j]=$schedule[$i][$j];
         }
@@ -428,14 +431,14 @@ for($i=0;$i<$f;$i++){
           if($j==0){
             echo '<td class="rw">';
             echo $matrix[$i][$j];
-            echo "</td>";  
+            echo "</td>";
            }else{
             if($matrix[$i][$j-1]!=$matrix[$i][$j]){
                 //Imprimimos el colspan
                 $size = horizontalCount($j,$matrix);
                 echo '<td colspan="'.$size.'" class="rw">';
                 echo $matrix[$i][$j];;
-                echo "</td>"; 
+                echo "</td>";
             }
            }
              }
@@ -444,13 +447,27 @@ for($i=0;$i<$f;$i++){
             $size = getSubjectLength($matrix,$i,$j);
             echo '<td rowspan="'.$size.'" class="c">';
             echo $matrix[$i][$j];//$matrix[$i][$j];
+
+          $beforeColon = substr($matrix[$i][$j], strpos($matrix[$i][$j],']')+1);
+          $id_class = substr($matrix[$i][$j], 0 , strpos($matrix[$i][$j],']'));
+            echo "</br>";
+            echo Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['classes/update', 'id' => $id_class, 'return' => 'yes' ]);
+            echo Html::a('<span class="glyphicon glyphicon-trash"></span>', ['classes/delete', 'id' => $id_class, 'return' => 'yes'], [
+                            'class' => '',
+                            'data' => [
+                                'confirm' => 'Are you absolutely sure ? You will lose all the information about this user with this action.',
+                                'method' => 'post',
+                            ],
+                        ]);
             echo "</td>";
             }else{
                 if($matrix[$i][$j]==" "){
             echo '<td class="emptyRow">';
+            echo Html::a('<span class="glyphicon glyphicon-plus"></span>', ['classes/create', 'day' => $j, 'time_start' => $matrix[$i][0].":00", 'return' => 'yes' ]);
+
             echo $matrix[$i][$j];
-            echo "</td>";}            
-            } }         
+            echo "</td>";}
+            } }
     }
     echo "</tr>";
 }

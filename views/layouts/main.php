@@ -36,17 +36,38 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Classes', 'url' => ['/classes/index']],
-            ['label' => 'Instructors', 'url' => ['/instructor/index']],
             ['label' => 'InstructorSchedule', 'url' => ['/instructorschedule/index']],
             ['label' => 'InstructorSubject', 'url' => ['/instructor-subject/index']],
             ['label' => 'ProgramSubject', 'url' => ['/program-subject/index']],
-            ['label' => 'Rooms', 'url' => ['/room/index']],
             ['label' => 'RoomSchedule', 'url' => ['/roomschedule/index']],
-            /*['label' => 'Schedule', 'url' => ['/schedule/index']],*/
-            ['label' => 'Semester', 'url' => ['/semester/index']],
             ['label' => 'StudyProgram', 'url' => ['/study-program/index']],
-            ['label' => 'Subject', 'url' => ['/subject/index']],
+            ['label' => 'Create',
+            'items' => [
+                '<li class="dropdown-header">Manage Classes</li>',
+                 ['label' => 'Classes', 'url' => ['/classes/index']],
+                 '<li class="divider"></li>',
+
+                 '<li class="dropdown-header">Manage Instructors</li>',
+                 ['label' => 'Instructors', 'url' => ['/instructor/index']],
+                 '<li class="divider"></li>',
+
+                 '<li class="dropdown-header">Manage Rooms</li>',
+                 ['label' => 'Rooms', 'url' => ['/room/index']],
+                 '<li class="divider"></li>',
+
+                 '<li class="dropdown-header">Manage Subjects</li>',
+                 ['label' => 'Subject', 'url' => ['/subject/index']],
+                 '<li class="divider"></li>',
+
+                 '<li class="dropdown-header">Manage Semesters</li>',
+                 ['label' => 'Semester', 'url' => ['/semester/index']],
+                 '<li class="divider"></li>',
+
+                 '<li class="dropdown-header">Import data</li>',
+                 ['label' => 'Import', 'url' => ['/import-file/index']],
+
+               ],
+            ],
             /*['label' => 'Contact', 'url' => ['/site/contact']],*/
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]
