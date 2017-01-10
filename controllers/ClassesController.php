@@ -62,7 +62,7 @@ class ClassesController extends Controller
      * @return mixed
      */
 
-    public function actionCreate($day = null, $time_start = null, $return = null)
+    public function actionCreate($day = null, $time_start = null, $subject = null, $return = null)
     {
 
         // get a session variable. The following usages are equivalent:
@@ -70,6 +70,7 @@ class ClassesController extends Controller
         $ref = Yii::$app->request->referrer;
         if(!empty($time_start)) $model->time_start = $time_start;
         if(!empty($day)) $model->day = $day;
+        if(!empty($subject)) $model->id_subject = $subject;
         if(!empty($return)) $model->day = $day;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

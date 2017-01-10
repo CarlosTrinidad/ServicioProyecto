@@ -3,7 +3,7 @@ use yii\helpers\registerCss;
 use yii\helpers\Html;
 
 
-$this->title = Yii::t('app', 'Horario de Profesor');
+$this->title = Yii::t('app', 'Horario por materia');
 
 //Se aplican estilos al horario
 $this->registerCss("table {width: 80%; margin: 0 auto; border:#000000;} td.c{background-color:#FACC2E; color:#0B0B61; font-weight: bold;}  td{width: 13%; text-align: center;} td.rw{background-color:#0B0B61;color:#FACC2E} .emptyRow{ background-color:#FFFFFF;}");
@@ -21,7 +21,7 @@ echo "<br>";
            // print_r($subject->programSubjects);
 setClassesIntoSchedule2($subject->classes,$horario);
 		// }
-printMatrix($horario);
+printMatrix($horario, $subject);
 
 
 
@@ -54,7 +54,7 @@ function setSchedule($intv){
 }
 
 //Función que imprime los horarios
-function printMatrix($matrix){
+function printMatrix($matrix, $sbj){
 	$f=sizeof($matrix);
 	$c=sizeof($matrix[0]);
 	// echo '<table  border="1" width: 100% class="ScheduleTable">';
@@ -92,7 +92,7 @@ for($i=0;$i<$f;$i++){
             echo '<td class="emptyRow">';
 	        echo $matrix[$i][$j];
 	        // echo $matrix[$i][0].":00";
-					echo Html::a('<span class="glyphicon glyphicon-plus"></span>', ['classes/create', 'day' => $j, 'time_start' => $matrix[$i][0].":00", 'return' => 'yes' ]);
+					echo Html::a('<span class="glyphicon glyphicon-plus"></span>', ['classes/create','subject' => $sbj->id, 'day' => $j, 'time_start' => $matrix[$i][0].":00",'return' => 'yes' ]);
 				echo "</td>";}
             } }
 	}
