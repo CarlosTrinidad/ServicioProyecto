@@ -8,7 +8,10 @@ use app\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use yii\widgets\ActiveForm;
+use yii\web\Response;
+use yii\helpers\Url;
+use yii\helpers\Html;
 /**
  * UserController implements the CRUD actions for User model.
  */

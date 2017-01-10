@@ -12,6 +12,8 @@ use Yii;
  */
 class Schedule extends \yii\db\ActiveRecord
 {
+
+
     /**
      * @inheritdoc
      */

@@ -8,6 +8,12 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
+<?php $form = ActiveForm::begin([
+    'method' => 'post',
+ 'enableClientValidation' => false,
+ 'enableAjaxValidation' => true,
+]);
+?>
 <div class="user-form">
 
     <?php $form = ActiveForm::begin(); ?>
@@ -17,6 +23,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'password2')->passwordInput(['maxlength' => true]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

@@ -3,7 +3,8 @@
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 namespace app\models;
-
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 use Yii;
 
 /**
@@ -15,7 +16,8 @@ use Yii;
  * @property string $password
  */
 class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
-{
+{public $pass;
+public $password2;
     /**
      * @inheritdoc
      */
@@ -31,9 +33,18 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         return [
             [['name', 'email', 'password'], 'required'],
-            [['name', 'email', 'password'], 'string', 'max' => 40],
+            ['name', 'match', 'pattern' => "/^.{4,40}$/", 'message' => 'Mínimo 4 y máximo 40 caracteres'],
+            ['email', 'email', 'message' => "Formato no valido"],
+             [['name','email'],'unique'],
+             [['password','password2'], 'required', 'on' => ['Create']],
+            [['password2'],'compare','compareAttribute'=>'password'],
+             [['password', 'password2'], 'string', 'min'=>8,'max' => 20]
         ];
     }
+
+
+
+
 
     /**
      * @inheritdoc
@@ -45,8 +56,29 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'name' => 'Name',
             'email' => 'Email',
             'password' => 'Password',
+            'password2' => Yii::t('app', 'Confirmar Password'),
         ];
     }
+    public function beforeSave($insert)
+        {
+            if (parent::beforeSave($insert)) {
+                if ($this->isNewRecord) {
+                  $hash = Yii::$app->getSecurity()->generatePasswordHash($this->password);
+                  $pass[$this->id]=$this->password;
+                  $this->password = $hash;
+
+                }
+                else{
+                  if(!empty($this->password))
+               {
+                   $this->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
+               }
+                }
+                return true;
+            }
+            return false;
+        }
+
 
        public static function findIdentity($id)
        {
@@ -76,9 +108,13 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
          */
         public static function findByUsername($username)
         {
-              return static::find()->where(['name'=>$username])->one();
+               return self::findOne(['name'=>$username]);
         }
+        public static function findByUserhash($password)
+        {
 
+              return static::find()->where(['password'=>$password])->one();
+        }
         /**
          * @inheritdoc
          */
@@ -111,7 +147,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
          */
         public function validatePassword($password)
         {
-            return $this->password === $password;
+
+            return  Yii::$app->getSecurity()->validatePassword($password,$this->password );
         }
 
 }

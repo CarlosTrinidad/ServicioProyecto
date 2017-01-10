@@ -18,7 +18,7 @@ class LoginForm extends Model
     public $rememberMe = true;
 
     private $_user = false;
-
+    private $_hash = false;
 
     /**
      * @return array the validation rules.
@@ -44,12 +44,13 @@ class LoginForm extends Model
      */
     public function validatePassword($attribute, $params)
     {
+
         if (!$this->hasErrors()) {
             $user = $this->getUser();
 
-            if (!$user || !$user->validatePassword($this->password)) {
+              if (!$user || !Yii::$app->getSecurity()->validatePassword($this->password,$user->password)) {
                 $this->addError($attribute, 'Incorrect username or password.');
-            }
+                          }
         }
     }
 
@@ -77,5 +78,14 @@ class LoginForm extends Model
         }
 
         return $this->_user;
+    }
+
+    public function getHash()
+    {
+        if ($this->_hash === false) {
+            $this->_hash = User::findByUserhash($this->password);
+        }
+
+        return $this->_hash;
     }
 }
