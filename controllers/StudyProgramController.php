@@ -8,6 +8,7 @@ use app\models\StudyProgramSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Schedule;
 
 /**
  * StudyProgramController implements the CRUD actions for StudyProgram model.
@@ -104,6 +105,15 @@ class StudyProgramController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    /**
+    *Función para mostrar el horario del programa de estudios
+    */
+    public function actionSchedule($id){
+    $studyProgram = StudyProgram::findOne($id);
+    $interval = Schedule::find()->all();
+     return $this->render("studyProgramSchedule",["interval"=>$interval,"studyProgram"=>$studyProgram]);
     }
 
     /**
