@@ -21,6 +21,7 @@ class SubjectscheduleController extends Controller
 	}
 
 	public function actionSubjects(){
+		\Yii::$app->session->set('returnUrl', Url::to(['subjectschedule/subjects']));
 		$interval = Schedule::find()->all();
         $subjects = Subject::find()->all();
         return $this->render("subjectGroupSchedule",["interval"=>$interval,"subjects"=>$subjects]);
