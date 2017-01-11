@@ -19,7 +19,8 @@ class ClassesController extends Controller
      */
     public function behaviors()
     {
-        return [  'access' => [
+        return [  
+          'access' => [
                         'class' => \yii\filters\AccessControl::className(),
                         'only' => ['create','update','delete'],
                         'rules' => [
