@@ -12,7 +12,7 @@ if($semesters){
 	//Variable para representar los dias
     $days = array(1,2,3,4,5);
     $dayDistribution = [];
-  
+
 
 	foreach ($semesters as $semester) {
 		 $dayDistribution[] = "";
@@ -36,7 +36,7 @@ if($semesters){
      printSchedule($sch2);
      unset($dayDistribution);
 	}
-	
+
 	}else{
 		echo "No hay ningún semestre registrado";
 	}
@@ -151,7 +151,7 @@ foreach ($interval as $hour) {
 $iniTime = array_search($startTime, $hours);
 $endTime = array_search($endTime, $hours);
 for($i = $iniTime;$i<=$endTime;$i++){
-$section[$i][$col]="Materia: ".$class->idSubject->name."<br>"."Salón: ".$class->idRoom->room."<br>".$prog;
+$section[$i][$col]=$class->id."]"."Materia: ".$class->idSubject->name."<br>"."Salón: ".$class->idRoom->room."<br>".$prog;
 }
 }
 
@@ -232,10 +232,12 @@ for($i=0;$i<$f;$i++){
             if($matrix[$i-1][$j]!=$matrix[$i][$j] and $matrix[$i][$j]!=" "){
             $size = getSubjectLength($matrix,$i,$j);
             echo '<td rowspan="'.$size.'" class="c">';
-            echo $matrix[$i][$j];//$matrix[$i][$j];
+            // echo $matrix[$i][$j];//$matrix[$i][$j];
 
           $beforeColon = substr($matrix[$i][$j], strpos($matrix[$i][$j],']')+1);
           $id_class = substr($matrix[$i][$j], 0 , strpos($matrix[$i][$j],']'));
+          echo $beforeColon;
+
             echo "</br>";
             echo Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['classes/update', 'id' => $id_class, 'return' => 'yes' ]);
             echo Html::a('<span class="glyphicon glyphicon-trash"></span>', ['classes/delete', 'id' => $id_class, 'return' => 'yes'], [
