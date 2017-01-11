@@ -19,4 +19,10 @@ class SemesterscheduleController extends Controller
     $semester = Semester::findOne($id);
         return $this->render("semesterSchedule",["interval"=>$interval,"semester"=>$semester]);
 	}
+
+	public function actionSemesters(){
+	$interval = Schedule::find()->all();
+	$semesters = Semester::find()->all();
+	return $this->render("semesterScheduleGroup",["interval"=>$interval,"semesters"=>$semesters]);
+	}
 }
