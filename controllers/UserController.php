@@ -3,34 +3,23 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Classes;
-use app\models\ClassesSearch;
+use app\models\User;
+use app\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ClassesController implements the CRUD actions for Classes model.
+ * UserController implements the CRUD actions for User model.
  */
-class ClassesController extends Controller
+class UserController extends Controller
 {
     /**
      * @inheritdoc
      */
     public function behaviors()
     {
-        return [  'access' => [
-                        'class' => \yii\filters\AccessControl::className(),
-                        'only' => ['create','update','delete'],
-                        'rules' => [
-                            // allow authenticated users
-                            [
-                                'allow' => true,
-                                'roles' => ['@'],
-                            ],
-                            // everything else is denied
-                        ],
-                    ],
+        return [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -41,12 +30,12 @@ class ClassesController extends Controller
     }
 
     /**
-     * Lists all Classes models.
+     * Lists all User models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new ClassesSearch();
+        $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -56,7 +45,7 @@ class ClassesController extends Controller
     }
 
     /**
-     * Displays a single Classes model.
+     * Displays a single User model.
      * @param integer $id
      * @return mixed
      */
@@ -68,29 +57,16 @@ class ClassesController extends Controller
     }
 
     /**
-     * Creates a new Classes model.
+     * Creates a new User model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-
-    public function actionCreate($day = null, $time_start = null, $subject = null,$room = null, $return = null)
+    public function actionCreate()
     {
-
-        // get a session variable. The following usages are equivalent:
-        $model = new Classes();
-        $ref = Yii::$app->request->referrer;
-        if(!empty($time_start)) $model->time_start = $time_start;
-        if(!empty($day)) $model->day = $day;
-        if(!empty($subject)) $model->id_subject = $subject;
-        if(!empty($room)) $model->id_room = $room;
-        if(!empty($return)) $model->day = $day;
+        $model = new User();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-          if ($return == 'yes'){
-              return $this->redirect(\Yii::$app->session->get('returnUrl'));
-          }else{
             return $this->redirect(['view', 'id' => $model->id]);
-          }
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -99,24 +75,17 @@ class ClassesController extends Controller
     }
 
     /**
-     * Updates an existing Classes model.
+     * Updates an existing User model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id, $return = null)
+    public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        // $this->findModel($id)->delete();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-
-          if ($return == 'yes'){
-              return $this->redirect(\Yii::$app->session->get('returnUrl'));
-          }else{
             return $this->redirect(['view', 'id' => $model->id]);
-          }
-
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -125,33 +94,28 @@ class ClassesController extends Controller
     }
 
     /**
-     * Deletes an existing Classes model.
+     * Deletes an existing User model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id,  $return = null)
+    public function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
-        if ($return == 'yes'){
-            return $this->redirect(\Yii::$app->session->get('returnUrl'));
-        }else{
-          return $this->redirect(['index']);
-        }
-
+        return $this->redirect(['index']);
     }
 
     /**
-     * Finds the Classes model based on its primary key value.
+     * Finds the User model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Classes the loaded model
+     * @return User the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Classes::findOne($id)) !== null) {
+        if (($model = User::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
