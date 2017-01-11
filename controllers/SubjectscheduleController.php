@@ -19,4 +19,10 @@ class SubjectscheduleController extends Controller
     $subj = Subject::findOne($id);
         return $this->render("subjectSchedule",["interval"=>$interval,"subject"=>$subj]);
 	}
+
+	public function actionSubjects(){
+		$interval = Schedule::find()->all();
+        $subjects = Subject::find()->all();
+        return $this->render("subjectGroupSchedule",["interval"=>$interval,"subjects"=>$subjects]);
+	}
 }
