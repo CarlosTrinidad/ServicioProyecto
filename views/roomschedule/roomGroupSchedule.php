@@ -52,7 +52,7 @@ function setSchedule($intv){
 }
 
 //Función que imprime los horarios
-function printMatrix($matrix){
+function printMatrix($matrix, $room){
 	$f=sizeof($matrix);
 	$c=sizeof($matrix[0]);
 	// echo '<table  border="1" width: 100% class="ScheduleTable">';
@@ -87,7 +87,7 @@ for($i=0;$i<$f;$i++){
             echo '<td class="emptyRow">';
 	        echo $matrix[$i][$j];
 	        // echo $matrix[$i][0].":00";
-					echo Html::a('<span class="glyphicon glyphicon-plus"></span>', ['classes/create', 'day' => $j, 'time_start' => $matrix[$i][0].":00", 'return' => 'yes' ]);
+					echo Html::a('<span class="glyphicon glyphicon-plus"></span>', ['classes/create','room' => $room->id, 'day' => $j, 'time_start' => $matrix[$i][0].":00",'return' => 'yes' ]);
 				echo "</td>";}
             } }
 	}
