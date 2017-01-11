@@ -19,6 +19,11 @@ class m161115_020936_create_subject_table extends Migration
             'model' => $this->boolean(1),
             'type' => $this->string(15)->notNull(),
             'modality' => $this->string(15),
+            'number'=> $this->string(15),
+            'hour_pre'=> $this->string(15),
+            'nr_np'=> $this->string(15),
+            'max_capacity'=>$this->string(15)
+
         ],'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci');
     }
 
