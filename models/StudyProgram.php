@@ -51,4 +51,10 @@ class StudyProgram extends \yii\db\ActiveRecord
     {
         return $this->hasMany(ProgramSubject::className(), ['id_program' => 'id']);
     }
+
+     public function getSemesters()
+    {
+        return $this->hasMany(Semester::className(), ['study_program_id' => 'id']);
+    }
+
 }
