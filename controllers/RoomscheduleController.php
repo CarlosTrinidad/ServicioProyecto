@@ -8,6 +8,7 @@ use app\models\Schedule;
 use app\models\Semester;
 use app\models\Room;
 use yii\helpers\Url;
+use yii\filters\VerbFilter;
 
 class RoomscheduleController extends Controller
 {

@@ -6,6 +6,7 @@ use app\models\Classes;
 use app\models\Schedule;
 use yii\web\Controller;
 use yii\helpers\Url;
+use yii\filters\VerbFilter;
 
 class InstructorscheduleController extends Controller
 {

@@ -7,6 +7,7 @@ use yii\web\Controller;
 use app\models\Schedule;
 use app\models\Semester;
 use yii\helpers\Url;
+use yii\filters\VerbFilter;
 
 class SemesterscheduleController extends Controller
 {
