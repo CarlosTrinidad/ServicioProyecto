@@ -21,8 +21,10 @@ class SemesterscheduleController extends Controller
 	}
 
 	public function actionSemesters(){
-	$interval = Schedule::find()->all();
-	$semesters = Semester::find()->all();
-	return $this->render("semesterScheduleGroup",["interval"=>$interval,"semesters"=>$semesters]);
+		\Yii::$app->session->set('returnUrl', Url::to(['semesterschedule/semesters']));
+
+		$interval = Schedule::find()->all();
+		$semesters = Semester::find()->all();
+		return $this->render("semesterScheduleGroup",["interval"=>$interval,"semesters"=>$semesters]);
 	}
 }
