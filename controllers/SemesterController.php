@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Subject;
+use app\models\Classes;
 use app\models\Instructor;
 use app\models\InstructorSubject;
 use app\models\ProgramSubject;
@@ -132,55 +133,77 @@ class SemesterController extends Controller
 
         // Here is the sample array of data
         $hearderAsignaturas = array(
-            'Id',
-            'Obligatoria/Optativa/Libre/Taller',
             'Asignatura',
-            'Programa',
-            'Semestre',
-            'Modalidad',
-            'Modelo',
-            'Nombres',
-            'Apellidos',
-            'Lunes',
-            'Martes',
-            'Miércoles',
-            'Jueves',
-            'Viernes',
-            'Sábado');
-
+            'PE',
+            '#',
+            'NOMBRE(S)',
+            'APELLIDOS',
+            'Hr.Pres',
+            'Nr N/P',
+            'SEMESTRE',
+            'MODELO',
+            'CUPO MAX',
+            'LUNES',
+            '',
+            'MARTES',
+            '',
+            'MIÉRCOLES',
+            '',
+            'JUEVES',
+            '',
+            'VIERNES',
+            '',
+            'SÁBADO',
+            '');
+            $header2 = array('Salón','Horario','Salón','Horario','Salón','Horario','Salón','Horario','Salón','Horario','Salón','Horario');
         // Create new PHPExcel object
         $objPHPExcel = new \PHPExcel();
 
         // Fill worksheet from values in array
         $objPHPExcel->getActiveSheet()->fromArray($hearderAsignaturas, null, 'A1');
+        $objPHPExcel->getActiveSheet()->fromArray($header2, null, 'K2');
         $sheet = $objPHPExcel->getActiveSheet();
+        $sheet->mergeCells('K1:L1');
+        $sheet->mergeCells('M1:N1');
+        $sheet->mergeCells('O1:P1');
+        $sheet->mergeCells('Q1:R1');
+        $sheet->mergeCells('S1:T1');
+        $sheet->mergeCells('U1:V1');
+
         // Rename worksheet
-        $sheet->setTitle('Asignaturas');
+        $sheet->setTitle('Licenciatura');
         // Add style
-        $header = 'a1:o1';
+        $header = 'K1:V1';
         $sheet->getStyle($header)->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('b1b1b1');
+        $sheet->getStyle('K2:V2')->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('b1b1b1');
         $style = array(
             'font' => array('bold' => true,),
             'alignment' => array('horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,),
             );
         $sheet->getStyle($header)->applyFromArray($style);
+        $sheet->getStyle('K2:V2')->applyFromArray($style);
         // Set AutoSize for asignaturas and email modalidad
         $sheet->getColumnDimension('B')->setAutoSize(true);
         $sheet->getColumnDimension('C')->setAutoSize(true);
 
 
-        $asignatura = new Subject();
-        $asignatura = Subject::find()->all();
+        $asignaturas = new Subject();
+        $asignaturas = Subject::find()->orderBy('name')->all();
         $sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
 
-        foreach ($asignatura as $key) {
-            $highestRow = $objPHPExcel->getSheet(0)->getHighestRow();
-            print_r($highestRow);
-            $sheetData[1]['C'] = $key->name;
+        foreach ($asignaturas as $asignatura) {
+            // $highestRow = $objPHPExcel->getSheet(0)->getHighestRow();
+            // print_r($highestRow);
+            // $sheetData[1]['C'] = $key->name;
 
             // for ($row=2; $row <= $highestRow ; $row++) {
             //         $sheetData[$row]['C'] = $key->name;
             // }
+            $clases = new Classes();
+            $clases = Classes::find()->where(['id_subject' => $asignatura->id])->all();
+            foreach ($clases as $clase) {
+              print_r($clase->idSubject->name);
+            }
         }
 
         header('Content-Type: application/vnd.ms-excel');
@@ -188,10 +211,10 @@ class SemesterController extends Controller
         header('Cache-Control: max-age=0');
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
         // Forzar descarga
-        $objWriter->save('php://output');
+        // $objWriter->save('php://output');
         // Save Excel 2007 file
-        /*$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        $objWriter->save('MyExcel.xlsx');*/
+        // $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save('MyExcel.xlsx');
     }
 
 }
