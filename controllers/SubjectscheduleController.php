@@ -7,9 +7,33 @@ use yii\web\Controller;
 use app\models\Schedule;
 use app\models\Semester;
 use yii\helpers\Url;
+use yii\filters\VerbFilter;
 
 class SubjectscheduleController extends Controller
 {
+	public function behaviors()
+	{
+			return [
+				'access' => [
+											'class' => \yii\filters\AccessControl::className(),
+											'only' => ['create','update','delete'],
+											'rules' => [
+													// allow authenticated users
+													[
+															'allow' => true,
+															'roles' => ['@'],
+													],
+													// everything else is denied
+											],
+									],
+					'verbs' => [
+							'class' => VerbFilter::className(),
+							'actions' => [
+									'delete' => ['POST'],
+							],
+					],
+			];
+	}
 
 	public function actionSubject($id){
     echo $id;

@@ -6,6 +6,7 @@ use app\models\Classes;
 use app\models\Schedule;
 use yii\web\Controller;
 use yii\helpers\Url;
+use yii\filters\VerbFilter;
 
 class InstructorscheduleController extends Controller
 {
@@ -19,6 +20,31 @@ class InstructorscheduleController extends Controller
 	// 	$section = "profesores";
 	// 	return $this->render("index",["model"=>$model,'section'=>$section,"materias"=>$materias,"clases"=>$clases]);
 	// }
+
+	public function behaviors()
+	{
+			return [
+				'access' => [
+											'class' => \yii\filters\AccessControl::className(),
+											'only' => ['create','update','delete'],
+											'rules' => [
+													// allow authenticated users
+													[
+															'allow' => true,
+															'roles' => ['@'],
+													],
+													// everything else is denied
+											],
+									],
+					'verbs' => [
+							'class' => VerbFilter::className(),
+							'actions' => [
+									'delete' => ['POST'],
+							],
+					],
+			];
+	}
+
 	public function actionIndex(){
 		\Yii::$app->session->set('returnUrl', Url::to(['instructorschedule/index']));
 
