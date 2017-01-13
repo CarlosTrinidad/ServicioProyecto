@@ -151,6 +151,14 @@ class ImportFileController extends \yii\web\Controller
                         $newSubject->name = (string)$sheetData[$row]['B'];
                         $newSubject->sp = (string)$sheetData[$row]['D'];
                         // echo $sheetData[$row]['M'];
+                        // NUEVOS CAMPOS
+                        $newSubject->hour_pre = (string)$sheetData[$row]['J'];
+                        $newSubject->nr_np = (string)$sheetData[$row]['K'];
+                        $newSubject->max_capacity = (string)$sheetData[$row]['AA'];
+                        $newSubject->number = (string)$sheetData[$row]['E'];
+                        // Semestre
+                        // $newSubject->number = (string)$sheetData[$row]['L'];
+
                         $modelModify = str_replace("MEYA", "MEyA", $sheetData[$row]['M']);
 
                         if (array_search($modelModify,$modelos) == false) {
