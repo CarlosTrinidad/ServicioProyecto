@@ -40,7 +40,7 @@ class Subject extends \yii\db\ActiveRecord
             [['model'], 'integer'],
             [['name'], 'string', 'max' => 110],
             [['sp'], 'string', 'max' => 100],
-            [['type', 'modality'], 'string', 'max' => 15],
+            [['type', 'modality','number','hour_pre','nr_np','max_capacity'], 'string', 'max' => 15],
         ];
     }
 

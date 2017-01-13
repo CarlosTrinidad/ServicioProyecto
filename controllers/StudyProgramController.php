@@ -124,7 +124,7 @@ class StudyProgramController extends Controller
     *Función para mostrar el horario del programa de estudios
     */
     public function actionSchedule($id){
-        \Yii::$app->session->set('returnUrl', Url::to(['studyProgram/schedule', 'id'=>$id]));
+        \Yii::$app->session->set('returnUrl', Url::to(['study-program/schedule', 'id'=>$id]));
     $studyProgram = StudyProgram::findOne($id);
     $interval = Schedule::find()->all();
      return $this->render("studyProgramSchedule",["interval"=>$interval,"studyProgram"=>$studyProgram]);
