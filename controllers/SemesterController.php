@@ -190,21 +190,55 @@ class SemesterController extends Controller
         $sheet->setTitle('Licenciatura');
         // Add style
         $header = 'K1:V1';
-        $sheet->getStyle($header)->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('b1b1b1');
-        $sheet->getStyle('K2:V2')->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('b1b1b1');
-        $style = array(
-            'font' => array('bold' => true,),
+        $sheet->getStyle('K1:V2')->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('dddddd');
+        $style1 = array(
+            'font' => array('bold'  => true,
+                            'size'  => 9,
+                            'name'  => 'Arial'),
             'alignment' => array('horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,),
             );
-        $sheet->getStyle($header)->applyFromArray($style);
-        $sheet->getStyle('K2:V2')->applyFromArray($style);
+        $style2 = array(
+            'font' => array('bold'  => false,
+                            'size'  => 9,
+                            'name'  => 'Arial'),
+                            'borders' => array(
+                                'allborders' => array(
+                                    'style' => \PHPExcel_Style_Border::BORDER_THIN
+                                )
+                            ),
+            'alignment' => array('horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,),
+            );
+
+        // $sheet->getStyle($header)->applyFromArray($style);
+        $objPHPExcel->getActiveSheet()->freezePane('D2');
+        $sheet->getStyle('A1:V2')->applyFromArray($style1);
         // Set AutoSize for asignaturas and email modalidad
+        $sheet->getColumnDimension('A')->setAutoSize(true);
         $sheet->getColumnDimension('B')->setAutoSize(true);
         $sheet->getColumnDimension('C')->setAutoSize(true);
+        $sheet->getColumnDimension('D')->setAutoSize(true);
+        $sheet->getColumnDimension('E')->setAutoSize(true);
+        $sheet->getColumnDimension('F')->setAutoSize(true);
+        $sheet->getColumnDimension('G')->setAutoSize(true);
+        $sheet->getColumnDimension('H')->setAutoSize(true);
+        $sheet->getColumnDimension('I')->setAutoSize(true);
+        $sheet->getColumnDimension('J')->setAutoSize(true);
+        $sheet->getColumnDimension('K')->setAutoSize(true);
+        $sheet->getColumnDimension('L')->setAutoSize(true);
+        $sheet->getColumnDimension('M')->setAutoSize(true);
+        $sheet->getColumnDimension('N')->setAutoSize(true);
+        $sheet->getColumnDimension('O')->setAutoSize(true);
+        $sheet->getColumnDimension('P')->setAutoSize(true);
+        $sheet->getColumnDimension('Q')->setAutoSize(true);
+        $sheet->getColumnDimension('R')->setAutoSize(true);
+        $sheet->getColumnDimension('S')->setAutoSize(true);
+        $sheet->getColumnDimension('T')->setAutoSize(true);
+        $sheet->getColumnDimension('U')->setAutoSize(true);
+        $sheet->getColumnDimension('V')->setAutoSize(true);
 
 
         $asignaturas = new Subject();
-        $asignaturas = Subject::find()->orderBy('name')->all();
+        $asignaturas = Subject::find()->where(['type' => 'Obligatorias'])->orderBy('name')->all();
         $sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
         $highestRow = $sheet->getHighestRow();
 
@@ -221,7 +255,7 @@ class SemesterController extends Controller
             // print_r($highestRow);
             $objPHPExcel->getActiveSheet()->setCellValue('A'.$row,$asignatura->name);
             $objPHPExcel->getActiveSheet()->setCellValue('B'.$row,(empty($asignatura->sp))?'':$asignatura->sp);
-            // $objPHPExcel->getActiveSheet()->setCellValue('C'.$row,(empty($asignatura->sp))?'':'');
+            $objPHPExcel->getActiveSheet()->setCellValue('C'.$row,(empty($asignatura->number))?'':$asignatura->number);
 
             $profs = $asignatura->instructorSubjects;
             foreach ($profs as $value) {
@@ -237,15 +271,16 @@ class SemesterController extends Controller
               }
             }
 
-            // $objPHPExcel->getActiveSheet()->setCellValue('F'.$row,(empty($asignatura->sp))?'':$asignatura->sp);
-            // $objPHPExcel->getActiveSheet()->setCellValue('G'.$row,(empty($asignatura->sp))?'':$asignatura->sp);
+            $objPHPExcel->getActiveSheet()->setCellValue('F'.$row,(empty($asignatura->hour_pre))?'':$asignatura->hour_pre);
+            $objPHPExcel->getActiveSheet()->setCellValue('G'.$row,(empty($asignatura->nr_np))?'':$asignatura->nr_np);
             // $objPHPExcel->getActiveSheet()->setCellValue('H'.$row,(empty($asignatura->sp))?'':$asignatura->sp);
 
             //Modelo
             $models = ['0' => 'MEFI','1' => 'MEyA', '2'=> 'MEFI-MEYA'];
             print_r($models[0]);
             $objPHPExcel->getActiveSheet()->setCellValue('I'.$row,(empty($models[$asignatura->model]))?'':$models[$asignatura->model]);
-            // $objPHPExcel->getActiveSheet()->setCellValue('J'.$row,(empty($models[$asignatura->model]))?'':$models[$asignatura->model]);
+            $objPHPExcel->getActiveSheet()->setCellValue('J'.$row,(empty($asignatura->max_capacity))?'':$asignatura->max_capacity);
+
 
             //clases
             $clases = new Classes();
@@ -291,14 +326,17 @@ class SemesterController extends Controller
               // print_r($clase->idSubject->name);
             }
             $row++;
-
-
-            echo "</br>";
-            echo "</br>";
-            echo "</br>";
-            echo "</br>";
             echo "</br>";
         }
+
+        // Mas estilos
+        $sheet->getStyle('K3:L'.$row)->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('fefeb5');
+        $sheet->getStyle('M3:N'.$row)->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('bfd3a7');
+        $sheet->getStyle('O3:P'.$row)->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('fefeb5');
+        $sheet->getStyle('Q3:R'.$row)->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('bfd3a7');
+        $sheet->getStyle('S3:T'.$row)->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('fefeb5');
+        $sheet->getStyle('U3:V'.$row)->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('bfd3a7');
+        $sheet->getStyle('A2:V'.$row)->applyFromArray($style2);
 
 
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
