@@ -208,9 +208,20 @@ class SemesterController extends Controller
                             ),
             'alignment' => array('horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,),
             );
+        $style3 = array(
+            'font' => array('bold'  => false,
+                            'size'  => 9,
+                            'name'  => 'Arial'),
+                            'borders' => array(
+                                'allborders' => array(
+                                    'style' => \PHPExcel_Style_Border::BORDER_THIN
+                                )
+                            ),
+            // 'alignment' => array('horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,),
+            );
 
         // $sheet->getStyle($header)->applyFromArray($style);
-        $objPHPExcel->getActiveSheet()->freezePane('D2');
+        $objPHPExcel->getActiveSheet()->freezePane('V2');
         $sheet->getStyle('A1:V2')->applyFromArray($style1);
         // Set AutoSize for asignaturas and email modalidad
         $sheet->getColumnDimension('A')->setAutoSize(true);
@@ -261,13 +272,14 @@ class SemesterController extends Controller
             foreach ($profs as $value) {
               // print_r($value->idInstructor->name);
               $nameVal = $sheet->getCell('D'.$row)->getValue();
-              print_r($nameVal);
+              $last_nameVal = $sheet->getCell('E'.$row)->getValue();
+              // print_r($nameVal);
               if($nameVal === NULL || $nameVal === '') {
                 $objPHPExcel->getActiveSheet()->setCellValue('D'.$row,(empty($value->idInstructor->name))?'':$value->idInstructor->name);
                 $objPHPExcel->getActiveSheet()->setCellValue('E'.$row,(empty($value->idInstructor->last_name))?'':$value->idInstructor->last_name);
               } else {
                 $objPHPExcel->getActiveSheet()->setCellValue('D'.$row,(empty($value->idInstructor->name))?'':$nameVal.'/'.$value->idInstructor->name);
-                $objPHPExcel->getActiveSheet()->setCellValue('E'.$row,(empty($value->idInstructor->last_name))?'':$nameVal.'/'.$value->idInstructor->last_name);
+                $objPHPExcel->getActiveSheet()->setCellValue('E'.$row,(empty($value->idInstructor->last_name))?'':$last_nameVal.'/'.$value->idInstructor->last_name);
               }
             }
 
@@ -277,7 +289,6 @@ class SemesterController extends Controller
 
             //Modelo
             $models = ['0' => 'MEFI','1' => 'MEyA', '2'=> 'MEFI-MEYA'];
-            print_r($models[0]);
             $objPHPExcel->getActiveSheet()->setCellValue('I'.$row,(empty($models[$asignatura->model]))?'':$models[$asignatura->model]);
             $objPHPExcel->getActiveSheet()->setCellValue('J'.$row,(empty($asignatura->max_capacity))?'':$asignatura->max_capacity);
 
@@ -291,32 +302,32 @@ class SemesterController extends Controller
                 case '1':
                   // Lunes
                   $objPHPExcel->getActiveSheet()->setCellValue('K'.$row,(empty($clase->id_room))?'':$clase->idRoom->room);
-                  $objPHPExcel->getActiveSheet()->setCellValue('L'.$row,(empty($clase->time_start))?'':$clase->time_start." - ".$clase->time_end);
+                  $objPHPExcel->getActiveSheet()->setCellValue('L'.$row,(empty($clase->time_start))?'':date('H:i', strtotime($clase->time_start))." - ".date('H:i', strtotime($clase->time_end)));
                   break;
                 case '2':
                   // Martes
                   $objPHPExcel->getActiveSheet()->setCellValue('M'.$row,(empty($clase->id_room))?'':$clase->idRoom->room);
-                  $objPHPExcel->getActiveSheet()->setCellValue('N'.$row,(empty($clase->time_start))?'':$clase->time_start." - ".$clase->time_end);
+                  $objPHPExcel->getActiveSheet()->setCellValue('N'.$row,(empty($clase->time_start))?'':date('H:i', strtotime($clase->time_start))." - ".date('H:i', strtotime($clase->time_end)));
                   break;
                 case '3':
                   // Miercoles
                   $objPHPExcel->getActiveSheet()->setCellValue('O'.$row,(empty($clase->id_room))?'':$clase->idRoom->room);
-                  $objPHPExcel->getActiveSheet()->setCellValue('P'.$row,(empty($clase->time_start))?'':$clase->time_start." - ".$clase->time_end);
+                  $objPHPExcel->getActiveSheet()->setCellValue('P'.$row,(empty($clase->time_start))?'':date('H:i', strtotime($clase->time_start))." - ".date('H:i', strtotime($clase->time_end)));
                   break;
                 case '4':
                   // Jueves
                   $objPHPExcel->getActiveSheet()->setCellValue('Q'.$row,(empty($clase->id_room))?'':$clase->idRoom->room);
-                  $objPHPExcel->getActiveSheet()->setCellValue('R'.$row,(empty($clase->time_start))?'':$clase->time_start." - ".$clase->time_end);
+                  $objPHPExcel->getActiveSheet()->setCellValue('R'.$row,(empty($clase->time_start))?'':date('H:i', strtotime($clase->time_start))." - ".date('H:i', strtotime($clase->time_end)));
                   break;
                 case '5':
                   // Viernes
                   $objPHPExcel->getActiveSheet()->setCellValue('S'.$row,(empty($clase->id_room))?'':$clase->idRoom->room);
-                  $objPHPExcel->getActiveSheet()->setCellValue('T'.$row,(empty($clase->time_start))?'':$clase->time_start." - ".$clase->time_end);
+                  $objPHPExcel->getActiveSheet()->setCellValue('T'.$row,(empty($clase->time_start))?'':date('H:i', strtotime($clase->time_start))." - ".date('H:i', strtotime($clase->time_end)));
                   break;
                 case '6':
                   // Sabado
                   $objPHPExcel->getActiveSheet()->setCellValue('U'.$row,(empty($clase->id_room))?'':$clase->idRoom->room);
-                  $objPHPExcel->getActiveSheet()->setCellValue('V'.$row,(empty($clase->time_start))?'':$clase->time_start." - ".$clase->time_end);
+                  $objPHPExcel->getActiveSheet()->setCellValue('V'.$row,(empty($clase->time_start))?'':date('H:i', strtotime($clase->time_start))." - ".date('H:i', strtotime($clase->time_end)));
                   break;
 
                 default:
@@ -330,13 +341,14 @@ class SemesterController extends Controller
         }
 
         // Mas estilos
-        $sheet->getStyle('K3:L'.$row)->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('fefeb5');
-        $sheet->getStyle('M3:N'.$row)->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('bfd3a7');
-        $sheet->getStyle('O3:P'.$row)->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('fefeb5');
-        $sheet->getStyle('Q3:R'.$row)->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('bfd3a7');
-        $sheet->getStyle('S3:T'.$row)->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('fefeb5');
-        $sheet->getStyle('U3:V'.$row)->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('bfd3a7');
-        $sheet->getStyle('A2:V'.$row)->applyFromArray($style2);
+        $sheet->getStyle('K3:L'.($row-1))->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('fefeb5');
+        $sheet->getStyle('M3:N'.($row-1))->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('bfd3a7');
+        $sheet->getStyle('O3:P'.($row-1))->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('fefeb5');
+        $sheet->getStyle('Q3:R'.($row-1))->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('bfd3a7');
+        $sheet->getStyle('S3:T'.($row-1))->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('fefeb5');
+        $sheet->getStyle('U3:V'.($row-1))->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('bfd3a7');
+        $sheet->getStyle('B2:V'.($row-1))->applyFromArray($style2);
+        $sheet->getStyle('A2:A'.($row-1))->applyFromArray($style3);
 
 
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
