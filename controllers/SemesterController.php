@@ -302,32 +302,34 @@ class SemesterController extends Controller
                 case '1':
                   // Lunes
                   $objPHPExcel->getActiveSheet()->setCellValue('K'.$row,(empty($clase->id_room))?'':$clase->idRoom->room);
-                  $objPHPExcel->getActiveSheet()->setCellValue('L'.$row,(empty($clase->time_start))?'':date('H:i', strtotime($clase->time_start))." - ".date('H:i', strtotime($clase->time_end)));
+                  $objPHPExcel->getActiveSheet()->setCellValue('L'.$row,(empty($clase->time_start))?'':substr($clase->time_start, 0, -3)." - ".substr($clase->time_end, 0, -3));
+                  var_dump($clase->time_start);
+                  var_dump(substr($clase->time_start, 0, -3));
                   break;
                 case '2':
                   // Martes
                   $objPHPExcel->getActiveSheet()->setCellValue('M'.$row,(empty($clase->id_room))?'':$clase->idRoom->room);
-                  $objPHPExcel->getActiveSheet()->setCellValue('N'.$row,(empty($clase->time_start))?'':date('H:i', strtotime($clase->time_start))." - ".date('H:i', strtotime($clase->time_end)));
+                  $objPHPExcel->getActiveSheet()->setCellValue('N'.$row,(empty($clase->time_start))?'':substr($clase->time_start, 0, -3)." - ".substr($clase->time_end, 0, -3));
                   break;
                 case '3':
                   // Miercoles
                   $objPHPExcel->getActiveSheet()->setCellValue('O'.$row,(empty($clase->id_room))?'':$clase->idRoom->room);
-                  $objPHPExcel->getActiveSheet()->setCellValue('P'.$row,(empty($clase->time_start))?'':date('H:i', strtotime($clase->time_start))." - ".date('H:i', strtotime($clase->time_end)));
+                  $objPHPExcel->getActiveSheet()->setCellValue('P'.$row,(empty($clase->time_start))?'':substr($clase->time_start, 0, -3)." - ".substr($clase->time_end, 0, -3));
                   break;
                 case '4':
                   // Jueves
                   $objPHPExcel->getActiveSheet()->setCellValue('Q'.$row,(empty($clase->id_room))?'':$clase->idRoom->room);
-                  $objPHPExcel->getActiveSheet()->setCellValue('R'.$row,(empty($clase->time_start))?'':date('H:i', strtotime($clase->time_start))." - ".date('H:i', strtotime($clase->time_end)));
+                  $objPHPExcel->getActiveSheet()->setCellValue('R'.$row,(empty($clase->time_start))?'':substr($clase->time_start, 0, -3)." - ".substr($clase->time_end, 0, -3));
                   break;
                 case '5':
                   // Viernes
                   $objPHPExcel->getActiveSheet()->setCellValue('S'.$row,(empty($clase->id_room))?'':$clase->idRoom->room);
-                  $objPHPExcel->getActiveSheet()->setCellValue('T'.$row,(empty($clase->time_start))?'':date('H:i', strtotime($clase->time_start))." - ".date('H:i', strtotime($clase->time_end)));
+                  $objPHPExcel->getActiveSheet()->setCellValue('T'.$row,(empty($clase->time_start))?'':substr($clase->time_start, 0, -3)." - ".substr($clase->time_end, 0, -3));
                   break;
                 case '6':
                   // Sabado
                   $objPHPExcel->getActiveSheet()->setCellValue('U'.$row,(empty($clase->id_room))?'':$clase->idRoom->room);
-                  $objPHPExcel->getActiveSheet()->setCellValue('V'.$row,(empty($clase->time_start))?'':date('H:i', strtotime($clase->time_start))." - ".date('H:i', strtotime($clase->time_end)));
+                  $objPHPExcel->getActiveSheet()->setCellValue('V'.$row,(empty($clase->time_start))?'':substr($clase->time_start, 0, -3)." - ".substr($clase->time_end, 0, -3));
                   break;
 
                 default:
