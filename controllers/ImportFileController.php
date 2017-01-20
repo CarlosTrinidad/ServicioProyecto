@@ -157,7 +157,7 @@ class ImportFileController extends \yii\web\Controller
                         $newSubject->max_capacity = (string)$sheetData[$row]['AA'];
                         $newSubject->number = (string)$sheetData[$row]['E'];
                         // Semestre
-                        // $newSubject->number = (string)$sheetData[$row]['L'];
+                        $newSubject->semes = (string)$sheetData[$row]['L'];
 
                         $modelModify = str_replace("MEYA", "MEyA", $sheetData[$row]['M']);
 
@@ -173,7 +173,7 @@ class ImportFileController extends \yii\web\Controller
                         // echo substr($sheetData[$row]['L'], 0, strspn($sheetData[$row]['L'], "0123456789"));
                         // echo '<br/>';
                         // if ($sheetData[$row]['G'] == null) {
-                            $newSubject->modality = "-";
+                            //$newSubject->modality = "-";
                         // }else{
                         //     $newSubject->modality = (string)$sheetData[$row]['G'];
                         // }

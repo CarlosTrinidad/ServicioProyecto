@@ -19,7 +19,7 @@ class SubjectSearch extends Subject
     {
         return [
             [['id', 'model'], 'integer'],
-            [['name', 'sp', 'type', 'modality'], 'safe'],
+            [['name', 'sp', 'type', 'semes'], 'safe'],
         ];
     }
 
@@ -66,7 +66,7 @@ class SubjectSearch extends Subject
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'sp', $this->sp])
             ->andFilterWhere(['like', 'type', $this->type])
-            ->andFilterWhere(['like', 'modality', $this->modality]);
+            ->andFilterWhere(['like', 'semes', $this->semes]);
 
         return $dataProvider;
     }

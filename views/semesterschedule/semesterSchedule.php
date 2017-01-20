@@ -465,7 +465,10 @@ for($i=0;$i<$f;$i++){
             }else{
                 if($matrix[$i][$j]==" "){
             echo '<td class="emptyRow">';
-            echo Html::a('<span class="glyphicon glyphicon-plus"></span>', ['classes/create', 'day' => $j, 'time_start' => $matrix[$i][0].":00", 'return' => 'yes' ]);
+            if (!Yii::$app->user->isGuest) {
+              echo Html::a('<span class="glyphicon glyphicon-plus"></span>', ['classes/create', 'day' => $j, 'time_start' => $matrix[$i][0].":00", 'return' => 'yes' ]);
+            } 
+
 
             echo $matrix[$i][$j];
             echo "</td>";}

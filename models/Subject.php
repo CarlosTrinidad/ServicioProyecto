@@ -40,7 +40,7 @@ class Subject extends \yii\db\ActiveRecord
             [['model'], 'integer'],
             [['name'], 'string', 'max' => 110],
             [['sp'], 'string', 'max' => 100],
-            [['type', 'modality','number','hour_pre','nr_np','max_capacity'], 'string', 'max' => 15],
+            [['type', 'semes','number','hour_pre','nr_np','max_capacity'], 'string', 'max' => 15],
         ];
     }
 
@@ -55,7 +55,7 @@ class Subject extends \yii\db\ActiveRecord
             'sp' => Yii::t('app', 'Sp'),
             'model' => Yii::t('app', 'Model'),
             'type' => Yii::t('app', 'Type'),
-            'modality' => Yii::t('app', 'Modality'),
+            'semes' => Yii::t('app', 'Semes'),
         ];
     }
 

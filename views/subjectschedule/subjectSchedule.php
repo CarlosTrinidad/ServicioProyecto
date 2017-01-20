@@ -92,7 +92,9 @@ for($i=0;$i<$f;$i++){
             echo '<td class="emptyRow">';
 	        echo $matrix[$i][$j];
 	        // echo $matrix[$i][0].":00";
+          if (!Yii::$app->user->isGuest) {
 					echo Html::a('<span class="btn btn-success glyphicon glyphicon-plus"></span>', ['classes/create','subject' => $sbj->id, 'day' => $j, 'time_start' => $matrix[$i][0].":00",'return' => 'yes' ]);
+        }
 				echo "</td>";}
             } }
 	}
