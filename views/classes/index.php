@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\helpers\ArrayHelper;
+use app\models\Classes;
 
 
 /* @var $this yii\web\View */
@@ -11,6 +12,7 @@ use yii\helpers\ArrayHelper;
 
 $this->title = Yii::t('app', 'Classes');
 $this->params['breadcrumbs'][] = $this->title;
+$parameter = Classes::decideGuest('');
 
 ?>
 
@@ -59,7 +61,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'time_start',
             'time_end',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn','template' => $parameter],
         ],
     ]);
 

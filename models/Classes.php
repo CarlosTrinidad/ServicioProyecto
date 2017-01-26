@@ -186,4 +186,15 @@ class Classes extends \yii\db\ActiveRecord
       }
     }
 
+    //Funcion para ocultar botones de ActionColumn del index
+        public function decideGuest($parameter){
+          if(!Yii::$app->user->isGuest){
+          $parameter = '{view} {update} {delete}';
+        }
+          else {
+            $parameter = '{view}';
+          }
+          return $parameter;
+        }
+
 }

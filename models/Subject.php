@@ -98,4 +98,15 @@ class Subject extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Semester::className(), ['id' => 'semester_id'])->viaTable('subject_semester', ['subject_id' => 'id']);
     }
+
+//Funcion para ocultar botones de ActionColumn del index
+    public function decideGuest($parameter){
+      if(!Yii::$app->user->isGuest){
+      $parameter = '{view} {update} {delete} {schedule}';
+    }
+      else {
+        $parameter = '{view} {schedule}';
+      }
+      return $parameter;
+    }
 }

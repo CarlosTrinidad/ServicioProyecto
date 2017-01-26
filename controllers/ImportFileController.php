@@ -26,7 +26,7 @@ class ImportFileController extends \yii\web\Controller
       return [
         'access' => [
                       'class' => \yii\filters\AccessControl::className(),
-                      'only' => ['create','update','delete'],
+                      'only' => ['index','view','create','update','delete'],
                       'rules' => [
                           // allow authenticated users
                           [
