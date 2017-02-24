@@ -77,7 +77,7 @@ for($i=0;$i<$f;$i++){
 					// echo $matrix[$i][$j];
 					echo $beforeColon;
 					echo "</br>";
-
+          if (!Yii::$app->user->isGuest) {
 					echo Html::a('<span class="btn btn-primary glyphicon glyphicon-pencil"></span>', ['classes/update', 'id' => $id_class, 'return' => 'yes' ]);
 					echo Html::a('<span class="btn btn-danger glyphicon glyphicon-trash"></span>', ['classes/delete', 'id' => $id_class, 'return' => 'yes'], [
 					                'class' => '',
@@ -86,6 +86,7 @@ for($i=0;$i<$f;$i++){
 					                    'method' => 'post',
 					                ],
 					            ]);
+                    }
 		    echo "</td>";
             }else{
             	if($matrix[$i][$j]==" "){

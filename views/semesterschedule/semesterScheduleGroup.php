@@ -239,6 +239,7 @@ for($i=0;$i<$f;$i++){
           echo $beforeColon;
 
             echo "</br>";
+            if (!Yii::$app->user->isGuest) {
             echo Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['classes/update', 'id' => $id_class, 'return' => 'yes' ]);
             echo Html::a('<span class="glyphicon glyphicon-trash"></span>', ['classes/delete', 'id' => $id_class, 'return' => 'yes'], [
                             'class' => '',
@@ -247,12 +248,14 @@ for($i=0;$i<$f;$i++){
                                 'method' => 'post',
                             ],
                         ]);
+                      }
             echo "</td>";
             }else{
                 if($matrix[$i][$j]==" "){
             echo '<td class="emptyRow">';
+            if (!Yii::$app->user->isGuest) {
             echo Html::a('<span class="glyphicon glyphicon-plus"></span>', ['classes/create', 'day' => $j, 'time_start' => $matrix[$i][0].":00", 'return' => 'yes' ]);
-
+            }
             echo $matrix[$i][$j];
             echo "</td>";}
             } }
