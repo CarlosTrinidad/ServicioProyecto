@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\Subject;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\StudyProgramSearch */
@@ -9,6 +10,7 @@ use yii\grid\GridView;
 
 $this->title = Yii::t('app', 'Study Programs');
 $this->params['breadcrumbs'][] = $this->title;
+$parameter = Subject::decideGuest('');
 ?>
 <div class="study-program-index">
 
@@ -28,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
 
             ['class' => 'yii\grid\ActionColumn',
-             'template' =>'{view} {update} {delete} {schedule}',
+             'template' => $parameter,
              'buttons' => [
              'schedule' => function ($url, $model, $key) {
                 return Html::a('<span class="glyphicon glyphicon-calendar"></span>', ['study-program/schedule', 'id' => $model->id],[ 'title' => Yii::t('app', 'Schedule'),'aria-label'=>Yii::t('app', 'Schedule'),'data-pjax' => "0",]);

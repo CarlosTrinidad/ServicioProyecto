@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\Classes;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ProgramSubjectSearch */
@@ -9,6 +10,7 @@ use yii\grid\GridView;
 
 $this->title = Yii::t('app', 'Program Subjects');
 $this->params['breadcrumbs'][] = $this->title;
+$parameter = Classes::decideGuest('');
 ?>
 <div class="program-subject-index">
 
@@ -43,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'id_program',
             // 'idProgram.name',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn','template' => $parameter],
         ],
     ]); ?>
 </div>
